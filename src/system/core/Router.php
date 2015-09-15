@@ -221,8 +221,8 @@ class CI_Router {
 			isset($route['translate_uri_dashes']) && $this->translate_uri_dashes = $route['translate_uri_dashes'];
 			unset($route['default_controller'], $route['translate_uri_dashes']);
 			$this->routes = $route;
-		}
 
+		}
 		// Is there anything to parse?
 		if ($this->uri->uri_string !== '')
 		{
@@ -294,15 +294,14 @@ class CI_Router {
 		{
 			show_error('Unable to determine what should be displayed. A default route has not been specified in the routing file.');
 		}
-
 		// Is the method being specified?
 		if (sscanf($this->default_controller, '%[^/]/%s', $class, $method) !== 2)
 		{
 			$method = 'index';
 		}
 
-		if ( ! file_exists(APPPATH.'controllers/'.$this->directory.ucfirst($class).'.php'))
-		{
+		if (! file_exists(APPPATH.'controllers/'.$this->directory.ucfirst($class).'.php'))
+		{	
 			// This will trigger 404 later
 			return;
 		}

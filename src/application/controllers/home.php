@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class home extends CI_Controller {
+class Home extends CI_Controller {
 	public function __construct()
     {
         parent::__construct();
@@ -36,7 +36,7 @@ class home extends CI_Controller {
 					$this->load->vars('course',$data);				
 				}
 				//查询试验课程
-				$result=$this->db->query('show columns from `表_1120139周海燕_通信原理`');
+				$result=$this->db->query('show columns from 表_1120139周海燕_'.urldecode($course));
 				$result=$result->result_array();
 				foreach ($result as $key => $value) {
 					$course_name[]=$value['Field'];

@@ -23,7 +23,7 @@
                     <tr>
                         <th>学号</th>
                         <th>姓名</th>
-                        <?php
+                        <?php if(!empty($course_name))
                         for ($i=4; $i < 10; $i++) { 
                             echo "<th>$course_name[$i]</th>";
                         }
