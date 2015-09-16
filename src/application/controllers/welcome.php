@@ -18,8 +18,9 @@ class Welcome extends CI_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function index()
-	{
-		$this->load->view('index');
+	{	
+		var_dump("aa");exit;
+		$this->load->view('Index');
 	}
 	public function register(){
 		if($_POST){
