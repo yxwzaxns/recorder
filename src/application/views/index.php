@@ -29,7 +29,7 @@ section{
 	$(document).ready(function(){
 		$('#submit').click(function(){
 			$.post("/index.php/welcome/login",$('#form').serialize(),function(data){
-				if(data==1){
+				if(data['status']==1){
 					location.href="/index.php/home/index";
 
 				}else{

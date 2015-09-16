@@ -57,12 +57,13 @@ class Welcome extends CI_Controller {
     		$this->session->set_userdata("user",$result);
     		// header('location: http://localhost/ci_recorder/index.php/admin/index');
     		header("Content-type: application/json");
-			$result=1;
-			echo json_encode($result);
+			$res['status']=1;
+			echo json_encode($res);
     	}else{
 			header("Content-type: application/json");
-			$result=0;
-			echo json_encode($result);    		
+			$res['status']=0;
+			$res['info']=$result;
+			echo json_encode($res);    		
     	}		
 	}
     public function logout(){

@@ -1,12 +1,8 @@
 <?php
 
-$a=0;
-$b=2;
-//=============
+//preg_match('/\S*\@([\S*])\s/i',"asd@sadad asd",$res);
 
-$a && ($b=$a);
+preg_match('/@(\S*)\s/i',"@sadads aasddNIAS",$res);
 
-//=============
-
-echo $b;
+var_dump($res);
 ?>
