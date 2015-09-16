@@ -1,10 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Home extends CI_Controller {
+class home extends CI_Controller {
 	public function __construct()
     {
         parent::__construct();
         if(!$this->session->has_userdata('user')){
-        	header('location:http://'.$_SERVER['HTTP_HOST'].'/	index.php');
+        	header('location:http://'.$_SERVER['HTTP_HOST'].'/index.php');
         }
     }
 	public function index($course=''){
