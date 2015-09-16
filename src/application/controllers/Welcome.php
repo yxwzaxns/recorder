@@ -62,7 +62,7 @@ class Welcome extends CI_Controller {
     	}else{
 			header("Content-type: application/json");
 			$res['status']=0;
-			$res['info']=$result;
+			//$res['info']=$result;
 			echo json_encode($res);    		
     	}		
 	}
