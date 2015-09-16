@@ -19,8 +19,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{	
-		var_dump("aa");exit;
-		$this->load->view('Index');
+		$this->load->view('index');
 	}
 	public function register(){
 		if($_POST){
