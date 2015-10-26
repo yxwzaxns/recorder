@@ -101,7 +101,7 @@ section{
           <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
-      </div>		          
+      </div>
 	</header>
 	<section>
 		<div class="container">
@@ -114,7 +114,7 @@ section{
 			            <div class="panel-body">
 			              	<form action="#" id="form">
 								用户名：<input type="text" name="username" required="required"/><br><br>
-								密&nbsp&nbsp&nbsp&nbsp码：<input type="password" name="password" required="required"/>
+								密&emsp;码：<input type="password" name="password" required="required"/>
 								<br>
 
 								<div style="margin-left: 20px;padding-left: 60px;padding-top: 10px">
@@ -169,7 +169,7 @@ section{
 		</div>
 	</section>
 	<footer>
-		
+
 	</footer>
 </body>
 </html>

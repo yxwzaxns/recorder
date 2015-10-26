@@ -7,10 +7,18 @@
   <link href="/public/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="/public/bootstrap/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/public/bootstrap/css/bootstrap-theme.css"/>
-	<script type="text/javascript" src="/public/js/jquery.js"></script>
+	<script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="/public/bootstrap/js/bootstrap.js"></script>
-  <script type="text/javascript" src="/public/js/jquery.circliful.min.js"></script>
-  <script type="text/javascript" src="/public/js/echarts/echarts.js"></script>
+  
+
+	<!-- DataTable -->
+	<link rel="stylesheet" type="text/css" href="/public/DataTable/media/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="/public/DataTable/resources/syntax/shCore.css">
+	<link rel="stylesheet" type="text/css" href="/public/DataTable/resources/demo.css">
+
+	<script type="text/javascript" language="javascript" src="/public/DataTable/media/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" language="javascript" src="/public/DataTable/resources/syntax/shCore.js"></script>
+	<script type="text/javascript" language="javascript" src="/public/DataTable/resources/demo.js"></script>
 
 <style type="text/css">
 *{
