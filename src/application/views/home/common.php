@@ -40,7 +40,10 @@
 	      var info=<?php echo empty($course)?0:1; ?>;
 	      if(info=='1')
 	        $('#info').show();
-
+//
+$('#dump_excel').click(function(){
+	location.href="/index.php/home/dump_excel";
+})
 	    });
 	</script>
 	<style media="screen">
@@ -156,12 +159,12 @@
 												</thead>
 												<tbody>
 													<tr>
-														<td>历史应到人数</td>
-														<td>259</td>
+														<td>应到人数</td>
+														<td>59</td>
 													</tr>
 													<tr>
 														<td>实到人数</td>
-														<td>258</td>
+														<td>58</td>
 													</tr>
 													<tr>
 														<td>未到人数</td>
@@ -181,7 +184,7 @@
 				</div>
             <br>
 						<div>
-								<button type="button" class="btn btn-info btn-block">生成excel表格</button>
+								<button type="button" id="dump_excel" class="btn btn-info btn-block">生成excel表格</button>
 						</div>
 
 
