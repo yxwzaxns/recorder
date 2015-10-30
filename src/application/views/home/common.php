@@ -1,7 +1,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h2 style="float:left;margin-top: 0px;"><span class="label label-info"><?php echo empty($course)?'选择课程':urldecode($course); ?></span></h2>
-        <div class="dropdown" style="float:left;margin-left:20px;margin-top:4px">
+		<h2 id="abc" style="float:left;margin-top: 0px;"><span class="label label-info"><?php echo empty($course)?'选择课程':urldecode($course); ?></span></h2>
+        <!-- <div class="dropdown" style="float:left;margin-left:20px;margin-top:4px">
           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             选择内容
             <span class="caret"></span>
@@ -11,7 +11,7 @@
             <li><a href="#">全勤记录</a></li>
             <li><a href="#">缺勤记录</a></li>
           </ul>
-        </div>
+        </div> -->
         <div class="clear"></div>
 	</div>
 	<script type="text/javascript">
@@ -19,6 +19,8 @@
 		var table=$('#example').DataTable({
 
 			"sScrollX": "1200px",
+			stateSave: true,
+			"pageLength": 10,
 			"bScrollCollapse": true,
 			"language": {
 				"search":"搜索关键词",
@@ -28,6 +30,7 @@
 	    }
 	  }
 		});
+		// submit data
 		$('#submit_button').click( function() {
         var data = table.$('input').serialize();
         alert(
@@ -36,34 +39,112 @@
         );
         return false;
     } );
+		//callback
+		$('#example').on( 'order.dt', function () {
+			aa();
+		} );
+		$('#example').on( 'length.dt', function () {
+			bb();
+		} );
+		$('#example').on( 'page.dt', function () {
+			aa();
+		} );
+		function bb(){
+			$(".bad_info").click(function(){
+					sid=$(this).data('sid');
+					name=$('#'+sid).html();
+					courcName=$(this).parent(".cource_item").data("cource-name");
+
+					 $('#myModal #name').val(name);
+					 $('#myModal #sid').val(sid);
+					 $('#myModal #course_name').val(courcName);
+
+					 $('#myModal').modal();
+				})
+		}
+		$('#abc').click(function(){alert("aba")})
 		//$('#myStat').circliful();
 	      var info=<?php echo empty($course)?0:1; ?>;
 	      if(info=='1')
 	        $('#info').show();
-//
-$('#dump_excel').click(function(){
-	location.href="/index.php/home/dump_excel";
-})
+					$('#dump_excel').click(function(){
+						location.href="/index.php/home/dump_excel";
+					})
+
+		//alert info of date
+		function aa(){
+			$(".bad_info").click(function(){
+					sid=$(this).data('sid');
+					name=$('#'+sid).html();
+					courcName=$(this).parent(".cource_item").data("cource-name");
+
+					 $('#myModal #name').val(name);
+					 $('#myModal #sid').val(sid);
+					 $('#myModal #course_name').val(courcName);
+
+					 $('#myModal').modal();
+				})
+		}
+		aa();
 	    });
 	</script>
+	<!-- pop -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">补签实验</h4>
+	      </div>
+				<div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="name" class="control-label">姓名</label>
+            <input type="text" class="form-control" id="name" value="">
+          </div>
+          <div class="form-group">
+            <label for="sid" class="control-label">学号</label>
+            <input class="form-control" id="sid" value=""></input>
+          </div>
+					<div class="form-group">
+						<label for=cource_name class="control-label">实验</label>
+						<input class="form-control" id="course_name"></input>
+					</div>
+					<p class="text-danger">确定补签此实验？</p>
+        </form>
+      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	        <button type="button" class="btn btn-primary">提交补签</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+<!--  pop -->
 	<style media="screen">
-	div.dataTables_wrapper {
-		width: 1000px;
-		margin: 0 auto;
+		div.dataTables_wrapper {
+			/*width: 1000px;*/
+			margin: 0 auto;
 		}
 		.cource_item_name {
-			width: 100px;
+			/*width: 100px;*/
 		}
 		.bad_info{
+			cursor: pointer;
 			border-radius: 2px;
 			display: inline-block;
 			padding: 5px;
 			background-color:#DB7093;
 		}
 		.good_info{
+			cursor: pointer;
+			background-color: #90EE90;
 			border-radius: 2px;
 			display: inline-block;
 			padding: 5px;
+		}
+		.cource_item{
+			white-space:nowrap;
 		}
 		.cource_item .input{
 			margin-left: 30px;
@@ -84,7 +165,7 @@ $('#dump_excel').click(function(){
 									<th>学号</th>
 									<th>姓名</th>
 									<?php if(!empty($course_name))
-									for ($i=4; $i < 10; $i++) {
+									for ($i=4; $i < count($course_name)-4; $i++) {
 											echo "<th class='cource_item_name'>$course_name[$i]</th>";
 									}
 									?>
@@ -94,11 +175,12 @@ $('#dump_excel').click(function(){
 					<tbody>
 						<?php if(!empty($course_data))
 							foreach ($course_data as $key => $value) {
-							echo '<tr><td style="width:70px">'.$value['学号'].'</td>
-												<td style="width:100px">'.$value['姓名'].'</td>';
+							echo '<tr>
+										<td style="width:70px">'.$value['学号'].'</td>
+										<td id="'.$value['学号'].'" style="width:100px">'.$value['姓名'].'</td>';
 							$course_name_len = count($course_name)-4;
-							for($i=0;$i<$course_name_len;$i++) {
-								echo '<td class="cource_item" data-cource-date="'.$value[$course_name[4+$i]].'">'.(is_null($value[$course_name[4+$i]])?'<span class="bad_info">未到</span>':'<span class="good_info">已到</span>').'
+							for($i=0;$i<$course_name_len-4;$i++) {
+								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$course_name[4+$i].'">'.(is_null($value[$course_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$course_name[4+$i]].'">已到</span>').'
 								<span class="input">评分<input type="text" id="row-57-age" name="row-57-age" value="27"></spqn></td>';
 							}
 							echo '</tr>';
@@ -111,7 +193,7 @@ $('#dump_excel').click(function(){
 								<th>学号</th>
 								<th>姓名</th>
 								<?php if(!empty($course_name))
-								for ($i=4; $i < 10; $i++) {
+								for ($i=4; $i < count($course_name)-4; $i++) {
 										echo "<th class='cource_item_name'>$course_name[$i]</th>";
 								}
 								?>
@@ -148,7 +230,7 @@ $('#dump_excel').click(function(){
                 </div>
             </div>
 						<div class="panel panel-primary">
-								<div class="panel-heading">历史统计信息</div>
+								<div class="panel-heading">统计信息</div>
 								<div class="panel-body">
 										<table class="table">
 												<thead>
@@ -160,7 +242,7 @@ $('#dump_excel').click(function(){
 												<tbody>
 													<tr>
 														<td>应到人数</td>
-														<td>59</td>
+														<td>69</td>
 													</tr>
 													<tr>
 														<td>实到人数</td>

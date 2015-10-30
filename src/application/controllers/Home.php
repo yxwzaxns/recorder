@@ -36,7 +36,7 @@ class Home extends CI_Controller {
 					$data=0;
 					$this->load->vars('course',$data);
 				}
-				//查询试验课程
+				//查询已经上过试验课程
 				$result=$this->db->query('show columns from 表_1120139周海燕_'.urldecode($course));
 				$result=$result->result_array();
 				foreach ($result as $key => $value) {
