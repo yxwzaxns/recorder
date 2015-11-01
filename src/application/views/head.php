@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/public/bootstrap/css/bootstrap-theme.css"/>
 	<script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="/public/bootstrap/js/bootstrap.js"></script>
-  
+
 
 	<!-- DataTable -->
 	<link rel="stylesheet" type="text/css" href="/public/DataTable/media/css/jquery.dataTables.css">
@@ -53,7 +53,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">选择课程<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
           	<?php foreach ($courses as $row){
-				echo '<li class="course" data="'.$row['工号'].'"><a href="/index.php/home/index/'.$row['课程名称'].'">'.$row['课程名称'].'</a></li>';
+				echo '<li class="course" data="'.$row['tid'].'"><a href="/index.php/home/index/'.$row['coursename'].'">'.$row['coursename'].'</a></li>';
 			}
 			?>
           </ul>

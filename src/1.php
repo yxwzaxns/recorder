@@ -1,9 +1,14 @@
 <?php
 
-//preg_match('/\S*\@([\S*])\s/i',"asd@sadad asd",$res);
+//preg_match('/(^(?![0-9]*$)[a-zA-Z0-9]{8,}$)/',$_GET["a"],$res,$ress);
+//$s=preg_match('/(\d{2}(?!\d))/',$_GET["a"],$res,$ress);
 
-$a = array(96,87,97,67);
-$a=json_encode($a);
+// foreach ($_POST as $key => $value) {
+//   $_POST[true]=$value;
+// }
+$a="a";
 
-var_dump($a);
+echo is_null($a)?'no':($a==1?"bu":"ok");
+
+
 ?>

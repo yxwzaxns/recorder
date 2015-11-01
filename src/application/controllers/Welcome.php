@@ -7,10 +7,10 @@ class Welcome extends CI_Controller {
 	 *
 	 * Maps to the following URL
 	 * 		http://example.com/index.php/welcome
-	 *	- or -  
+	 *	- or -
 	 * 		http://example.com/index.php/welcome/index
 	 *	- or -
-	 * Since this controller is set as the default controller in 
+	 * Since this controller is set as the default controller in
 	 * config/routes.php, it's displayed at http://example.com/
 	 *
 	 * So any other public methods not prefixed with an underscore will
@@ -18,7 +18,7 @@ class Welcome extends CI_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function index()
-	{	
+	{
 		$this->load->view('index');
 	}
 	public function register(){
@@ -41,7 +41,7 @@ class Welcome extends CI_Controller {
 				//返回失败信息
 				header("Content-type: application/json");
 				$result=null;
-				echo json_encode($result);				
+				echo json_encode($result);
 			}
 		}else{
 			$this->load->view('register');
@@ -58,13 +58,14 @@ class Welcome extends CI_Controller {
     		// header('location: http://localhost/ci_recorder/index.php/admin/index');
     		header("Content-type: application/json");
 			$res['status']=1;
+			$res['path']='http://'.$_SERVER['HTTP_HOST'].'/index.php/home/index';
 			echo json_encode($res);
     	}else{
 			header("Content-type: application/json");
 			$res['status']=0;
 			//$res['info']=$result;
-			echo json_encode($res);    		
-    	}		
+			echo json_encode($res);
+    	}
 	}
     public function logout(){
     	$this->session->unset_userdata($this->session->userdata('user'));
@@ -74,7 +75,7 @@ class Welcome extends CI_Controller {
     public function deal(){
 			$c=0;
 			//3265
-			for ($k=2800; $k < 3270; $k++) { 
+			for ($k=2800; $k < 3270; $k++) {
 				$file='/Users/ruby/yoooooou/www/recorder/src/sm/jpg3/38030302_baofeng_'.$k.'.jpg';
 				$img=imagecreatefromjpeg($file);
 
@@ -87,14 +88,14 @@ class Welcome extends CI_Controller {
 				$data=array();
 				$page='';
 
-				for ($h=0; $h < 320; $h++) { 
+				for ($h=0; $h < 320; $h++) {
 					$line[$h]='0';
 				}
-				
 
-				for ($j=15; $j < $imgY;) { 
 
-					for ($i=0; $i < strlen($line); $i++) { 
+				for ($j=15; $j < $imgY;) {
+
+					for ($i=0; $i < strlen($line); $i++) {
 						$color=imagecolorat($img, $i, $j);
 						//var_dump($color);exit;
 					if     ((($color >> 16) & 0xFF) >= 200){
@@ -104,9 +105,9 @@ class Welcome extends CI_Controller {
 							}elseif(($color & 0xFF) >= 200) {
 								$line[$i]='0';
 							}else
-								$line[$i]='1';		
+								$line[$i]='1';
 					}
-						for ($t=0; $t < strlen($line);) { 
+						for ($t=0; $t < strlen($line);) {
 							$line[$t]='';
 							//$line[$t+2]='';
 							$line[$t+3]='';
@@ -115,10 +116,10 @@ class Welcome extends CI_Controller {
 						}
 					$line1=$line."<br>";
 					$page.=$line1;
-					
+
 					$j+=5;
 					}
-				
+
 				$data['data']=$page;
 				$data['id']=$k;
 				$result=$this->db->insert('ba',$data);

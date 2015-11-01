@@ -170,6 +170,7 @@ class CI_Input {
 	 */
 	protected function _fetch_from_array(&$array, $index = NULL, $xss_clean = NULL)
 	{
+
 		is_bool($xss_clean) OR $xss_clean = $this->_enable_xss;
 
 		// If $index is NULL, it means that the whole $array is requested
@@ -609,13 +610,15 @@ class CI_Input {
 		}
 
 		// Clean $_POST Data
-		if (is_array($_POST) && count($_POST) > 0)
-		{
-			foreach ($_POST as $key => $val)
+			if (is_array($_POST) && count($_POST) > 0)
 			{
-				$_POST[$this->_clean_input_keys($key)] = $this->_clean_input_data($val);
+				foreach ($_POST as $key => $val)
+				{
+					$_POST[$this->_clean_input_keys($key)] = $this->_clean_input_data($val);
+
+				}
+
 			}
-		}
 
 		// Clean $_COOKIE Data
 		if (is_array($_COOKIE) && count($_COOKIE) > 0)
@@ -654,6 +657,7 @@ class CI_Input {
 		}
 
 		log_message('debug', 'Global POST, GET and COOKIE data sanitized');
+
 	}
 
 	// --------------------------------------------------------------------
@@ -724,15 +728,16 @@ class CI_Input {
 	 */
 	protected function _clean_input_keys($str, $fatal = TRUE)
 	{
+
 		if ( ! preg_match('/^[a-z0-9:_\/|-]+$/i', $str))
 		{
 			if ($fatal === TRUE)
 			{
-				return FALSE;
+				//return FALSE; //修改2015-11-1日，可以post特殊字符包括中文字母
+				return $str;
 			}
 			else
 			{
-				set_status_header(503);
 				echo 'Disallowed Key Characters.';
 				exit(7); // EXIT_USER_INPUT
 			}

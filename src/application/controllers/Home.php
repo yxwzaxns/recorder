@@ -17,21 +17,32 @@ class Home extends CI_Controller {
 			$this->load->vars('top',$top);
 			$this->load->view('home/advanced');
 		}else{
-			$where=array('工号' => $user['工号']);
-			$courses=$this->db->select('*')->from('实验课程安排表')->where($where)->get();
+			$where=array('tid' => $user['工号']);
+			$courses=$this->db->select('*')->from('courses')->where($where)->get();
 			$courses=$courses->result_array();
 
 			if(!empty($course)){
+				//把当前课程写入cession
+				$this->session->set_userdata('current_course',$course);
 				$data=array();
 				//查询cid课号的学生
 				//$result=$this->db->select('*')->from('表_1120139周海燕_'.urldecode($course))->get();
-				$result=$this->db->query('select * from 表_1120139周海燕_'.urldecode($course).' limit 40');
+				$result=$this->db->query('select * from 表_1120139周海燕_'.urldecode($course).' limit 50');
 				$result=$result->result_array();
-				//var_dump($result);exit;
 				if($result){
-					$data=$result;
+					foreach ($result as $key => $value) {
+						$_data[$value['学号']]=$value;
+					}
+					//查询这个课程的分数
+					$grade=$this->db->query('select * from 表_1120139周海燕_'.urldecode($course).'_grade limit 50');
+					$grade=$grade->result_array();
+					foreach ($grade as $key => $value) {
+						$_data[$value['sid']]['grade']=$value;
+					}
+					//var_dump($_data);exit;
+
 					$this->load->vars('course',$course);
-					$this->load->vars('course_data',$data);
+					$this->load->vars('course_data',$_data);
 				}else{
 					$data=0;
 					$this->load->vars('course',$data);
@@ -63,7 +74,58 @@ class Home extends CI_Controller {
 	}
 	function test(){
 		echo "aaa";
-		var_dump($_GET);
+		$_key=$this->db->escape(1000220628);
+		$_value=$this->db->escape("时域均衡");
+		$rs=$this->db->query('update 表_1120139周海燕_通信原理_grade set '.$_value.'=23'.' where sid='.$_key);
+		echo $rs;
+	}
+	function retroactive(){
+		$sid=$this->input->post('sid');
+		$item_name=$this->input->post('item_name');
+
+		$courseName=$this->session->userdata('current_course');
+		$user=$this->session->userdata('user');
+		$courseTable='表_'.$user['工号'].$user['姓名'].'_'.urldecode($courseName);
+
+		$rs=$this->db->query('update '.$courseTable.' set '.$item_name.'=1 where 学号='.$sid);
+		if($rs){
+			header("Content-type: application/json");
+			$res['status']=1;
+			$res['path']='http://'.$_SERVER['HTTP_HOST'].'/index.php/home/index/'.$this->session->userdata('current_course');
+			$res['rs']=$rs;
+			echo json_encode($res);
+		}
+	}
+	function update_grade(){
+		$data = $this->input->post();
+		 if ($data) {
+			$courseName=$this->session->userdata('current_course');
+			$user=$this->session->userdata('user');
+			$courseTable='表_'.$user['工号'].$user['姓名'].'_'.urldecode($courseName);
+
+			$_items=$this->db->query('show columns from '.$courseTable);
+			$_items=$_items->result_array();
+			foreach ($_items as $key => $value) {
+				$items[]=$value['Field'];
+			}
+
+			if ($this->db->table_exists($courseTable.'_grade')){
+				$this->db->trans_start();
+			    foreach ($data as $key => $value) {
+						$d=explode("-",$key);
+						$_key=$this->db->escape($d[0]);
+						$_value=$d[1];
+			    	$this->db->query('update '.$courseTable.'_grade set '.$_value.'='.$value.' where sid='.$_key);
+			    }
+				$this->db->trans_complete();
+			}else{
+					echo 'the table not exist';
+			}
+
+			//$result=$this->db->query('select * from '.$courseTable.' limit 1');
+			//$result=$result->result_array();
+		}
+
 	}
 	function dump_excel(){
 		$this->load->library('PHPExcel');

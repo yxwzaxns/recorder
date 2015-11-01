@@ -33,10 +33,10 @@
 		// submit data
 		$('#submit_button').click( function() {
         var data = table.$('input').serialize();
-        alert(
-            "The following data would have been submitted to the server: \n\n"+
-            data.substr( 0, 120 )+'...'
-        );
+				$.post('/index.php/home/update_grade',data,function(e){
+					alert("ok");
+				})
+				// alert(data);
         return false;
     } );
 		//callback
@@ -44,25 +44,11 @@
 			aa();
 		} );
 		$('#example').on( 'length.dt', function () {
-			bb();
+			aa();
 		} );
 		$('#example').on( 'page.dt', function () {
 			aa();
 		} );
-		function bb(){
-			$(".bad_info").click(function(){
-					sid=$(this).data('sid');
-					name=$('#'+sid).html();
-					courcName=$(this).parent(".cource_item").data("cource-name");
-
-					 $('#myModal #name').val(name);
-					 $('#myModal #sid').val(sid);
-					 $('#myModal #course_name').val(courcName);
-
-					 $('#myModal').modal();
-				})
-		}
-		$('#abc').click(function(){alert("aba")})
 		//$('#myStat').circliful();
 	      var info=<?php echo empty($course)?0:1; ?>;
 	      if(info=='1')
@@ -86,6 +72,19 @@
 				})
 		}
 		aa();
+		//补签
+		$(".retroactive").click(function(){
+			var retroactiveData = $('.retroactive_form').serialize();
+
+			$.post("/index.php/home/retroactive",retroactiveData,function(data){
+				if(data['status']==1){
+					top.location.href=data['path'];
+					//alert(top.location.href);
+				}
+				else
+					$('.alert').show();
+			})
+		})
 	    });
 	</script>
 	<!-- pop -->
@@ -97,25 +96,25 @@
 	        <h4 class="modal-title" id="myModalLabel">补签实验</h4>
 	      </div>
 				<div class="modal-body">
-        <form>
+        <form class="retroactive_form">
           <div class="form-group">
             <label for="name" class="control-label">姓名</label>
-            <input type="text" class="form-control" id="name" value="">
+            <input type="text" class="form-control" id="name" name="username">
           </div>
           <div class="form-group">
             <label for="sid" class="control-label">学号</label>
-            <input class="form-control" id="sid" value=""></input>
+            <input class="form-control" id="sid" name="sid"></input>
           </div>
 					<div class="form-group">
-						<label for=cource_name class="control-label">实验</label>
-						<input class="form-control" id="course_name"></input>
+						<label for=item_name class="control-label">实验</label>
+						<input class="form-control" id="course_name" name="item_name"></input>
 					</div>
 					<p class="text-danger">确定补签此实验？</p>
         </form>
       </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-	        <button type="button" class="btn btn-primary">提交补签</button>
+	        <button type="button" class="btn btn-primary retroactive">提交补签</button>
 	      </div>
 	    </div>
 	  </div>
@@ -143,6 +142,13 @@
 			display: inline-block;
 			padding: 5px;
 		}
+		.mid_info{
+			cursor: pointer;
+			background-color: #F4A460;
+			border-radius: 2px;
+			display: inline-block;
+			padding: 5px;
+		}
 		.cource_item{
 			white-space:nowrap;
 		}
@@ -165,7 +171,7 @@
 									<th>学号</th>
 									<th>姓名</th>
 									<?php if(!empty($course_name))
-									for ($i=4; $i < count($course_name)-4; $i++) {
+									for ($i=4; $i < count($course_name); $i++) {
 											echo "<th class='cource_item_name'>$course_name[$i]</th>";
 									}
 									?>
@@ -179,9 +185,9 @@
 										<td style="width:70px">'.$value['学号'].'</td>
 										<td id="'.$value['学号'].'" style="width:100px">'.$value['姓名'].'</td>';
 							$course_name_len = count($course_name)-4;
-							for($i=0;$i<$course_name_len-4;$i++) {
-								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$course_name[4+$i].'">'.(is_null($value[$course_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$course_name[4+$i]].'">已到</span>').'
-								<span class="input">评分<input type="text" id="row-57-age" name="row-57-age" value="27"></spqn></td>';
+							for($i=0;$i<$course_name_len;$i++) {
+								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$course_name[4+$i].'">'.(is_null($value[$course_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':($value[$course_name[4+$i]]!=1?'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$course_name[4+$i]].'">已到</span>':'<span class="mid_info" data-toggle="tooltip" data-placement="top" title="补签">补签</span>')).'
+								<span class="input">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-'.$course_name[4+$i].'" value="'.$value['grade'][$course_name[4+$i]].'"></span></td>';
 							}
 							echo '</tr>';
 						}
@@ -193,7 +199,7 @@
 								<th>学号</th>
 								<th>姓名</th>
 								<?php if(!empty($course_name))
-								for ($i=4; $i < count($course_name)-4; $i++) {
+								for ($i=4; $i < count($course_name); $i++) {
 										echo "<th class='cource_item_name'>$course_name[$i]</th>";
 								}
 								?>

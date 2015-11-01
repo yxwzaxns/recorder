@@ -27,17 +27,18 @@ section{
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#submit').click(function(){
-			$.post("/index.php/welcome/login",$('#form').serialize(),function(data){
+		$('.login').click(function(){
+			$.post("/index.php/welcome/login",$('#formlogin').serialize(),function(data){
 				if(data['status']==1){
-					location.href="/index.php/home/index";
-
-				}else{
-					$('#error_info').show();
+					top.location.href=data['path'];
+					//alert(top.location.href);
 				}
-			},"json");
+				else
+					$('.alert').show();
+			});
 			return false;
 		});
+
 	})
 </script>
 </head>
@@ -106,27 +107,31 @@ section{
 	<section>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-3">
+				<div class="col-sm-2">
 					<div class="panel panel-primary">
 			            <div class="panel-heading">
-			              <h3 class="panel-title">登录</h3>
+			              <h3 class="panel-title">选择操作</h3>
 			            </div>
-			            <div class="panel-body">
-			              	<form action="#" id="form">
-								用户名：<input type="text" name="username" required="required"/><br><br>
-								密&emsp;码：<input type="password" name="password" required="required"/>
+	            <div class="panel-body">
+								<!-- <button type="button" id="myModal" class="btn btn-success btn-block">登陆</button> -->
+								<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal">登&emsp;&emsp;陆</button>
 								<br>
+								<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal1">学生自主查询</button>
+	              	<!-- <form action="#" id="form">
+										用户名：<input type="text" name="username" required="required"/><br><br>
+										密&emsp;码：<input type="password" name="password" required="required"/>
+										<br>
 
-								<div style="margin-left: 20px;padding-left: 60px;padding-top: 10px">
-									<p class="text-danger" style="position: relative;left:-25px;display:none;" id="error_info">用户名或密码错误！</p>
-									<a href="/index.php/welcome/register" style="padding-right: 20px"><h5 style="display: inline-block">注册</h5></a>
-									<button type="submit" class="btn btn-sm btn-success" id="submit">登录</button>
-								</div>
-							</form>
-			            </div>
-		          	</div>
+										<div style="margin-left: 20px;padding-left: 60px;padding-top: 10px">
+											<p class="text-danger" style="position: relative;left:-25px;display:none;" id="error_info">用户名或密码错误！</p>
+											<a href="/index.php/welcome/register" style="padding-right: 20px"><h5 style="display: inline-block">注册</h5></a>
+											<button type="submit" class="btn btn-sm btn-success" id="submit">登录</button>
+										</div>
+									</form> -->
+	            </div>
+		    </div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-7">
 		          	<div class="panel panel-info">
 			            <div class="panel-heading">
 			              <h3 class="panel-title">新闻</h3>
@@ -143,8 +148,8 @@ section{
 				              <p class="list-group-item-text">1234</p>
 				            </a>
 				            <a href="#" class="list-group-item">
-				              <h4 class="list-group-item-heading">List group item heading</h4>
-				              <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+				              <h4 class="list-group-item-heading">Warining</h4>
+				              <p class="list-group-item-text">本系统只支持chrome,firefox,IE9及以上浏览器</p>
 				            </a>
 			            </div>
 		          	</div>
@@ -168,8 +173,76 @@ section{
 			</div>
 		</div>
 	</section>
-	<footer>
+<!-- footer -->
+	<!-- jq pop -->
+	<!-- pop login -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">用户登陆</h4>
+				</div>
+				<div class="modal-body">
+				<form id="formlogin">
+					<div class="form-group">
+						<label for="name" class="control-label">姓名</label>
+						<input type="text" class="form-control" id="name" name="username" value="">
+					</div>
+					<div class="form-group">
+						<label for="password" class="control-label">密码</label>
+						<input type="password" class="form-control" id="password" name="password"></input>
+					</div>
 
-	</footer>
+						<div class="alert alert-danger" role="alert" style="display:none">用户名或者密码不正确，请重新输入</div>
+
+					<!-- <div class="form-group">
+						<label for=cource_name class="control-label">实验</label>
+						<input class="form-control" id="course_name"></input>
+					</div>
+					<p class="text-danger">确定补签此实验？</p> -->
+				</form>
+			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary login">登陆</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<!--  pop -->
+<!-- myModel1-->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">出勤记录查询</h4>
+			</div>
+			<div class="modal-body">
+			<form>
+				<div class="form-group">
+					<label for="name" class="control-label">学号</label>
+					<input type="text" class="form-control" id="name" value="">
+				</div>
+				<div class="form-group">
+					<label for="sid" class="control-label">课号</label>
+					<input class="form-control" id="sid" value=""></input>
+				</div>
+				<!-- <div class="form-group">
+					<label for=cource_name class="control-label">实验</label>
+					<input class="form-control" id="course_name"></input>
+				</div>
+				<p class="text-danger">确定补签此实验？</p> -->
+			</form>
+		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary">查询</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- mydel1 -->
 </body>
 </html>
