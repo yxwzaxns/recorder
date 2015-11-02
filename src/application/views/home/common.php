@@ -33,8 +33,11 @@
 		// submit data
 		$('#submit_button').click( function() {
         var data = table.$('input').serialize();
+				$('.waitting').html("等待服务器处理......");
 				$.post('/index.php/home/update_grade',data,function(e){
-					alert("ok");
+					if(e['status']==1){
+						$('.waitting').html("提交修改信息");
+					}
 				})
 				// alert(data);
         return false;
@@ -186,8 +189,9 @@
 										<td id="'.$value['学号'].'" style="width:100px">'.$value['姓名'].'</td>';
 							$course_name_len = count($course_name)-4;
 							for($i=0;$i<$course_name_len;$i++) {
-								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$course_name[4+$i].'">'.(is_null($value[$course_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':($value[$course_name[4+$i]]!=1?'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$course_name[4+$i]].'">已到</span>':'<span class="mid_info" data-toggle="tooltip" data-placement="top" title="补签">补签</span>')).'
-								<span class="input">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-'.$course_name[4+$i].'" value="'.$value['grade'][$course_name[4+$i]].'"></span></td>';
+								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$course_name[4+$i].'">'.
+								(is_null($value[$course_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':($value[$course_name[4+$i]]!=1?'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$course_name[4+$i]].'">已到</span>':'<span class="mid_info" data-toggle="tooltip" data-placement="top" title="补签">补签</span>')).
+								'<span class="input">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-'.$course_name[4+$i].'" value="'.$value['grade'][$course_name[4+$i]].'"></span></td>';
 							}
 							echo '</tr>';
 						}
@@ -268,7 +272,7 @@
 
 				<br>
 				<div>
-						<button type="button" id="submit_button" class="btn btn-success btn-block">提交修改信息</button>
+						<button type="button" id="submit_button" class="btn btn-success btn-block"><div  class="waitting">提交修改信息</div></button>
 				</div>
             <br>
 						<div>

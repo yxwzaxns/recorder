@@ -118,6 +118,9 @@ class Home extends CI_Controller {
 			    	$this->db->query('update '.$courseTable.'_grade set '.$_value.'='.$value.' where sid='.$_key);
 			    }
 				$this->db->trans_complete();
+				header("Content-type: application/json");
+				$res['status']=1;
+				echo json_encode($res);
 			}else{
 					echo 'the table not exist';
 			}

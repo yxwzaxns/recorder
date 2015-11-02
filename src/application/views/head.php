@@ -20,6 +20,8 @@
 	<script type="text/javascript" language="javascript" src="/public/DataTable/resources/syntax/shCore.js"></script>
 	<script type="text/javascript" language="javascript" src="/public/DataTable/resources/demo.js"></script>
 
+	<!-- loading -->
+
 <style type="text/css">
 *{
 	margin: 0px;
