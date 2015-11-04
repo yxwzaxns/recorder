@@ -72,64 +72,24 @@ class Welcome extends CI_Controller {
     	$this->session->sess_destroy();
 		header("location: http://".$_SERVER['HTTP_HOST']."/index.php");
     }
-    public function deal(){
-			$c=0;
-			//3265
-			for ($k=2800; $k < 3270; $k++) {
-				$file='/Users/ruby/yoooooou/www/recorder/src/sm/jpg3/38030302_baofeng_'.$k.'.jpg';
-				$img=imagecreatefromjpeg($file);
-
-				//$imgSize=getimagesize($file);
-				//var_dump($imgSize);exit;
-				$imgX=320;
-				$imgY=240;
-
-				$line=' ';
-				$data=array();
-				$page='';
-
-				for ($h=0; $h < 320; $h++) {
-					$line[$h]='0';
+  	public function search($sid){
+			if(!empty($sid)){
+				$res=$this->db->query("select * from absencelist where sid = ".$sid);
+				$res=$res->result_array();
+				if($res){
+					header("Content-type: application/json");
+					$data['status']=1;
+					//$data['data']=json_encode($res);
+					$data['data']=$res;
+					echo json_encode($data);
+				}else {
+					header("Content-type: application/json");
+					$data['status']=1;
+					$data['data']="你目前没有缺勤记录";
+					echo json_encode($data);
 				}
-
-
-				for ($j=15; $j < $imgY;) {
-
-					for ($i=0; $i < strlen($line); $i++) {
-						$color=imagecolorat($img, $i, $j);
-						//var_dump($color);exit;
-					if     ((($color >> 16) & 0xFF) >= 200){
-								$line[$i]='0';
-							}elseif((($color >>  8) & 0xFF) >= 200) {
-								$line[$i]='0';
-							}elseif(($color & 0xFF) >= 200) {
-								$line[$i]='0';
-							}else
-								$line[$i]='1';
-					}
-						for ($t=0; $t < strlen($line);) {
-							$line[$t]='';
-							//$line[$t+2]='';
-							$line[$t+3]='';
-							$line[$t+4]='';
-							$t+=5;
-						}
-					$line1=$line."<br>";
-					$page.=$line1;
-
-					$j+=5;
-					}
-
-				$data['data']=$page;
-				$data['id']=$k;
-				$result=$this->db->insert('ba',$data);
-				if($result)
-				$c+=1;
-				echo $c;
-				echo "<br>";
 			}
-			echo 'all'.$c;
-    }
+		}
     public function show(){
     	$where['id']=333;
     	$re=$this->db->select('*')->from('ba')->where($where)->get();

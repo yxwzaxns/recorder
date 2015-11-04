@@ -24,6 +24,9 @@ section{
 	padding-top: 20px;
 
 }
+.bad_list{
+	margin-top: 5px;
+}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -38,8 +41,37 @@ section{
 			});
 			return false;
 		});
-
+// search
+	$(".search").click(function(){
+		var sid=$(".search_input").val();
+		var re=/^\d{10}$/;
+		if(sid!=''){
+			if(re.test(sid)){
+				$.get("/index.php/welcome/search/"+sid,function(e){
+					if(e['status']==1){
+						$("#myModal1 ul").html("");
+						for(i=0;i<eval(e['data']).length;i++){
+							data='<li class="list-group-item list-group-item-danger bad_list">'+e['data'][i]['coursename']+'</li>';
+							$("#myModal1 ul").append(data);
+							data="";
+						}
+					}
+				})
+			}else{
+				$("#myModal1 ul").html("");
+				$("#myModal1 ul").append('<li class="list-group-item list-group-item-warning bad_list">请输入正确的学号</li>');
+			}
+		}else{
+			$("#myModal1 ul").html("");
+			$("#myModal1 ul").append('<li class="list-group-item list-group-item-warning bad_list">请输入学号</li>');
+		}
+		return false;
 	})
+	})
+	// gotohome
+	function gotohome(){
+		location.href="/index.php/home/index";
+	}
 </script>
 </head>
 <body>
@@ -114,7 +146,12 @@ section{
 			            </div>
 	            <div class="panel-body">
 								<!-- <button type="button" id="myModal" class="btn btn-success btn-block">登陆</button> -->
-								<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal">登&emsp;&emsp;陆</button>
+								<?php
+								if($this->session->has_userdata('user'))
+									echo '<button type="button" class="btn btn-info btn-block" onclick="gotohome()">个人中心</button>';
+								else
+								  echo '<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal">登&emsp;&emsp;陆</button>';
+								?>
 								<br>
 								<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal1">学生自主查询</button>
 	              	<!-- <form action="#" id="form">
@@ -223,12 +260,14 @@ section{
 			<form>
 				<div class="form-group">
 					<label for="name" class="control-label">学号</label>
-					<input type="text" class="form-control" id="name" value="">
+					<input type="text" class="form-control search_input" id="name" name="sid">
 				</div>
 				<div class="form-group">
-					<label for="sid" class="control-label">课号</label>
-					<input class="form-control" id="sid" value=""></input>
-				</div>
+
+						<ul class="list-group">
+
+
+						</ul>
 				<!-- <div class="form-group">
 					<label for=cource_name class="control-label">实验</label>
 					<input class="form-control" id="course_name"></input>
@@ -238,7 +277,7 @@ section{
 		</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary">查询</button>
+				<button type="button" class="btn btn-primary search">查询</button>
 			</div>
 		</div>
 	</div>

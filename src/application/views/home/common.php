@@ -34,11 +34,18 @@
 		$('#submit_button').click( function() {
         var data = table.$('input').serialize();
 				$('.waitting').html("等待服务器处理......");
-				$.post('/index.php/home/update_grade',data,function(e){
-					if(e['status']==1){
-						$('.waitting').html("提交修改信息");
+				$.ajax({
+					url:'/index.php/home/update_grade',
+					type:'post',
+					async:false,
+					data:data,
+					success:function(e){
+										if(e['status']==1){
+											alert("保存成功");
+											//$('.waitting').html("提交修改信息");
+											}
 					}
-				})
+			})
 				// alert(data);
         return false;
     } );
@@ -53,12 +60,18 @@
 			aa();
 		} );
 		//$('#myStat').circliful();
-	      var info=<?php echo empty($course)?0:1; ?>;
-	      if(info=='1')
-	        $('#info').show();
-					$('#dump_excel').click(function(){
-						location.href="/index.php/home/dump_excel";
-					})
+	  var info=<?php echo empty($course)?0:1; ?>;
+	  if(info=='1'){
+			$('.main_body').show();
+	    $('#info').show();
+		}else{
+			$('.main_body').hide();
+			$('#info').hide();
+		}
+		// download excel
+		$('#dump_excel').click(function(){
+			location.href="/index.php/home/dump_excel";
+		})
 
 		//alert info of date
 		function aa(){
@@ -162,8 +175,9 @@
 			width: 30px;
 			text-align: center;
 		}
+
 	</style>
-	<div class="panel-body">
+	<div class="panel-body main_body">
 	<div class="container-fluid">
 	  <div class="row">
 	    <div class="col-xs-12 col-md-10">

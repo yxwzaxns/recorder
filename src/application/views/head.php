@@ -68,6 +68,7 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
+				<li><a href="/">回到首页</a></li>
         <li><a href="/index.php/welcome/logout">退出系统</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
