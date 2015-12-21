@@ -83,13 +83,17 @@ $query_builder = TRUE;
 // 	'failover' => array(),
 // 	'save_queries' => TRUE
 // );
+$host     = getenv('MYSQL_PORT_3306_TCP_ADDR')?getenv('MYSQL_PORT_3306_TCP_ADDR'):'localhost';
+$user     = getenv('MYSQL_USERNAME')?getenv('MYSQL_USERNAME'):'root';
+$password = getenv('MYSQL_PASSWORD')?getenv('MYSQL_PASSWORD'):1234;
+$database = getenv('MYSQL_INSTANCE_NAME')?getenv('MYSQL_INSTANCE_NAME'):'CI';
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '1234',
-	'database' => 'recorder',
+	'hostname' => $host,
+	'username' => $user,
+	'password' => $password,
+	'database' => $database,
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
