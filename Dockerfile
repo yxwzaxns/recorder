@@ -35,12 +35,10 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
 	sed -i "s/variables_order.*/variables_order = \"EGPCS\"/g" /etc/php5/apache2/php.ini
 
 # 配置默认放置App的目录
-RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
-ADD . /app
+RUN mkdir -p /app && rm -fr /var/www/html && mkdir -p /var/www/html
+ADD start.sh /app
 WORKDIR /app
-RUN chmod 755 ./start.sh
-
-RUN chmod -R 777 /app/*
+RUN chmod a+x ./start.sh
 
 EXPOSE 80
 CMD ["./start.sh"]

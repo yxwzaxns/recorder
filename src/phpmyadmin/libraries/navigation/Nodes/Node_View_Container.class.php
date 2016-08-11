@@ -9,17 +9,17 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
-require_once 'libraries/navigation/Nodes/Node_DatabaseChild_Container.class.php';
-
 /**
  * Represents a container for view nodes in the navigation tree
  *
  * @package PhpMyAdmin-Navigation
  */
-class Node_View_Container extends Node_DatabaseChild_Container
+class Node_View_Container extends Node
 {
     /**
      * Initialises the class
+     *
+     * @return Node_View_Container
      */
     public function __construct()
     {
@@ -27,13 +27,11 @@ class Node_View_Container extends Node_DatabaseChild_Container
         $this->icon  = PMA_Util::getImage('b_views.png', __('Views'));
         $this->links = array(
             'text' => 'db_structure.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%1$s&amp;tbl_type=view'
-                    . '&amp;token=' . $_SESSION[' PMA_token '],
+                    . '&amp;db=%1$s&amp;token=' . $GLOBALS['token'],
             'icon' => 'db_structure.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%1$s&amp;tbl_type=view'
-                    . '&amp;token=' . $_SESSION[' PMA_token '],
+                    . '&amp;db=%1$s&amp;token=' . $GLOBALS['token'],
         );
-        $this->classes   = 'viewContainer subContainer';
+        $this->classes   = 'viewContainer';
         $this->real_name = 'views';
 
         $new_label = _pgettext('Create new view', 'New');
@@ -42,12 +40,13 @@ class Node_View_Container extends Node_DatabaseChild_Container
         $new->icon  = PMA_Util::getImage('b_view_add.png', $new_label);
         $new->links = array(
             'text' => 'view_create.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%2$s&amp;token=' . $_SESSION[' PMA_token '],
+                    . '&amp;db=%2$s&amp;token=' . $GLOBALS['token'],
             'icon' => 'view_create.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%2$s&amp;token=' . $_SESSION[' PMA_token '],
+                    . '&amp;db=%2$s&amp;token=' . $GLOBALS['token'],
         );
         $new->classes = 'new_view italics';
         $this->addChild($new);
     }
 }
 
+?>

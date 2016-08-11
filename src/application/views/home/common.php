@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h2 id="abc" style="float:left;margin-top: 0px;"><span class="label label-info"><?php echo empty($course)?'选择课程':urldecode($course); ?></span></h2>
+		<h2 id="abc" style="float:left;margin-top: 0px;"><span class="label label-info"><?php echo empty($course)?'选择课程':$course; ?></span></h2>
         <!-- <div class="dropdown" style="float:left;margin-left:20px;margin-top:4px">
           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             选择内容
@@ -35,15 +35,14 @@
         var data = table.$('input').serialize();
 				$('.waitting').html("等待服务器处理......");
 				$.ajax({
-					url:'/index.php/home/update_grade',
+					url:'/home/update_grade',
 					type:'post',
-					async:false,
 					data:data,
 					success:function(e){
-										if(e['status']==1){
-											alert("保存成功");
-											//$('.waitting').html("提交修改信息");
-											}
+							if(e.status == 1){
+							alert("信息更新完成");
+							$('.waitting').html("提交修改信息");
+						}
 					}
 			})
 				// alert(data);
@@ -95,6 +94,7 @@
 			$.post("/index.php/home/retroactive",retroactiveData,function(data){
 				if(data['status']==1){
 					top.location.href=data['path'];
+					console.log(data);
 					//alert(top.location.href);
 				}
 				else
@@ -187,9 +187,9 @@
 							<tr>
 									<th>学号</th>
 									<th>姓名</th>
-									<?php if(!empty($course_name))
-									for ($i=4; $i < count($course_name); $i++) {
-											echo "<th class='cource_item_name'>$course_name[$i]</th>";
+									<?php if(!empty($coursed_name))
+									for ($i=4; $i < count($coursed_name); $i++) {
+											echo "<th class='cource_item_name'>$coursed_name[$i]</th>";
 									}
 									?>
 
@@ -201,11 +201,11 @@
 							echo '<tr>
 										<td style="width:70px">'.$value['学号'].'</td>
 										<td id="'.$value['学号'].'" style="width:100px">'.$value['姓名'].'</td>';
-							$course_name_len = count($course_name)-4;
+							$course_name_len = count($coursed_name)-4;
 							for($i=0;$i<$course_name_len;$i++) {
-								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$course_name[4+$i].'">'.
-								(is_null($value[$course_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':($value[$course_name[4+$i]]!=1?'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$course_name[4+$i]].'">已到</span>':'<span class="mid_info" data-toggle="tooltip" data-placement="top" title="补签">补签</span>')).
-								'<span class="input">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-'.$course_name[4+$i].'" value="'.$value['grade'][$course_name[4+$i]].'"></span></td>';
+								echo '<td class="cource_item" data-id="'.$value['学号'].'" data-cource-name="'.$coursed_name[4+$i].'">'.
+								(is_null($value[$coursed_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':($value[$coursed_name[4+$i]]!=1?'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$coursed_name[4+$i]].'">已到</span>':'<span class="mid_info" data-toggle="tooltip" data-placement="top" title="补签">补签</span>')).
+								'<span class="input">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-'.$coursed_name[4+$i].'" value="'.$value['grade'][$coursed_name[4+$i]].'"></span></td>';
 							}
 							echo '</tr>';
 						}
@@ -216,9 +216,9 @@
 						<tr>
 								<th>学号</th>
 								<th>姓名</th>
-								<?php if(!empty($course_name))
-								for ($i=4; $i < count($course_name); $i++) {
-										echo "<th class='cource_item_name'>$course_name[$i]</th>";
+								<?php if(!empty($coursed_name))
+								for ($i=4; $i < count($coursed_name); $i++) {
+										echo "<th class='cource_item_name'>$coursed_name[$i]</th>";
 								}
 								?>
 
@@ -299,3 +299,5 @@
 	</div>
 	</div>
 </div>
+</body>
+</html>

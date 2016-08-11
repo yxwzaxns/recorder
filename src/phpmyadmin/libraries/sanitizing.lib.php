@@ -30,7 +30,7 @@ function PMA_checkLink($url)
         $valid_starts[] = '?page=servers&';
     }
     foreach ($valid_starts as $val) {
-        if (/*overload*/mb_substr($url, 0, /*overload*/mb_strlen($val)) == $val) {
+        if (substr($url, 0, strlen($val)) == $val) {
             return true;
         }
     }
@@ -188,3 +188,4 @@ function PMA_sanitizeFilename($filename, $replaceDots = false)
     return $filename;
 }
 
+?>

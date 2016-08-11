@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
@@ -19,84 +20,48 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		// $data['navs'] = $this->nav->get_navs();
+		// $data['flinks'] = $this->db->query('select * from flink')->result_array();
+		// $data['kcjj'] = $this->article->get_article(23);
+		// $data['kcjc'] = $this->article->get_article(34);
+		// // 教材图片
+		// $data['kctp'] = $this->db->query('select * from ext_teach_photo')->result_array();
+		// // 教材视频
+		// $data['kcsp'] = $this->db->query('select * from article where type=2')->result_array();
+		// var_dump($data['kcsp']);exit;
 		$this->load->view('index');
 	}
-	public function register(){
-		if($_POST){
-			$this->load->database();
-			$data['tid']=$this->input->post('tid');
-			$data['username']=$this->input->post('username');
-			$data['password']=md5($this->input->post('password'));
-			$data['email']=$this->input->post('email');
-			$data['status']=0;
-			date_default_timezone_set("Asia/Shanghai");
-			$data['createdate']=time();
+	public function nav_list($nav_id='')
+	{
 
-			$result=$this->db->insert('user',$data);
-
-			if($result){
-				header("Content-type: application/json");
-				echo json_encode($result);
-			}else{
-				//返回失败信息
-				header("Content-type: application/json");
-				$result=null;
-				echo json_encode($result);
-			}
+		// 判断是否有子栏目
+		if($this->nav->has_node($nav_id) == 0){
+			$article_id = $this->article->getIdFromNid($nav_id);
+			header('location:http://'.$_SERVER['HTTP_HOST'].'/welcome/page/'.$article_id.'/0');
 		}else{
-			$this->load->view('register');
+			$first_subnav_id = $this->nav->get_subnavs($nav_id)[0]['id'];
+			$first_article_id = $this->article->get_article($this->article->getIdFromNid($first_subnav_id))['id'];
+			header('location:http://'.$_SERVER['HTTP_HOST'].'/welcome/page/'.$first_article_id);
 		}
 	}
-	public function login(){
-    	$where=array("姓名" => $this->input->post('username'),'密码' => $this->input->post('password'));
-    	$this->load->database();
- 		$this->db->db_set_charset('utf8');
-    	$result=$this->db->select('*')->from('教工用户表')->where($where)->get();
-    	$result=$result->row_array();
-    	if(!empty($result['工号'])){
-    		$this->session->set_userdata("user",$result);
-    		// header('location: http://localhost/ci_recorder/index.php/admin/index');
-    		header("Content-type: application/json");
-			$res['status']=1;
-			$res['path']='http://'.$_SERVER['HTTP_HOST'].'/index.php/home/index';
-			echo json_encode($res);
-    	}else{
-			header("Content-type: application/json");
-			$res['status']=0;
-			//$res['info']=$result;
-			echo json_encode($res);
-    	}
-	}
-    public function logout(){
-    	$this->session->unset_userdata($this->session->userdata('user'));
-    	$this->session->sess_destroy();
-		header("location: http://".$_SERVER['HTTP_HOST']."/index.php");
-    }
-  	public function search($sid){
-			if(!empty($sid)){
-				$res=$this->db->query("select * from absencelist where sid = ".$sid);
-				$res=$res->result_array();
-				if($res){
-					header("Content-type: application/json");
-					$data['status']=1;
-					//$data['data']=json_encode($res);
-					$data['data']=$res;
-					echo json_encode($data);
-				}else {
-					header("Content-type: application/json");
-					$data['status']=1;
-					$data['data']="你目前没有缺勤记录";
-					echo json_encode($data);
-				}
-			}
-		}
-    public function show(){
-    	$where['id']=333;
-    	$re=$this->db->select('*')->from('ba')->where($where)->get();
-    	$re=$re->row_array();
-    	var_dump($re);
-    }
-}
+	public function page($article_id='',$isNode=1)
+	{
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+		$data['navs'] = $this->nav->get_navs();
+		$data['article'] = $this->article->get_article($article_id)['content'];
+
+		if( $isNode == 0){
+			$data['subnavs'] = $this->nav->get_nav($this->article->getNidFromId($article_id));
+		}else{
+			$data['subnavs'] = $this->nav->get_subnavs($this->nav->getPidFromId($this->article->getNidFromId($article_id)));
+		}
+
+		$this->load->view('layout_top',$data);
+		$this->load->view('layout_body');
+
+	}
+	public function test($value='')
+	{
+		$this->load->view('layout_top');
+	}
+}

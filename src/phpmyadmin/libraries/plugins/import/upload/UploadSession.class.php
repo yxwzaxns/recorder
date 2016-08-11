@@ -58,7 +58,7 @@ class UploadSession implements UploadInterface
         }
         $ret = $_SESSION[$SESSION_KEY][$id];
 
-        if (! PMA_Import_sessionCheck() || $ret['finished']) {
+        if (! PMA_import_sessionCheck() || $ret['finished']) {
             return $ret;
         }
 
@@ -93,3 +93,4 @@ class UploadSession implements UploadInterface
         return $ret;
     }
 }
+?>

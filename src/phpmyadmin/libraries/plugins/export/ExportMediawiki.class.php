@@ -98,11 +98,24 @@ class ExportMediawiki extends ExportPlugin
     }
 
     /**
+     * This method is called when any PluginManager to which the observer
+     * is attached calls PluginManager::notify()
+     *
+     * @param SplSubject $subject The PluginManager notifying the observer
+     *                            of an update.
+     *
+     * @return void
+     */
+    public function update (SplSubject $subject)
+    {
+    }
+
+    /**
      * Outputs export header
      *
      * @return bool Whether it succeeded
      */
-    public function exportHeader()
+    public function exportHeader ()
     {
         return true;
     }
@@ -112,7 +125,7 @@ class ExportMediawiki extends ExportPlugin
      *
      * @return bool Whether it succeeded
      */
-    public function exportFooter()
+    public function exportFooter ()
     {
         return true;
     }
@@ -120,12 +133,11 @@ class ExportMediawiki extends ExportPlugin
     /**
      * Outputs database header
      *
-     * @param string $db       Database name
-     * @param string $db_alias Alias of db
+     * @param string $db Database name
      *
      * @return bool Whether it succeeded
      */
-    public function exportDBHeader($db, $db_alias = '')
+    public function exportDBHeader ($db)
     {
         return true;
     }
@@ -137,7 +149,7 @@ class ExportMediawiki extends ExportPlugin
      *
      * @return bool Whether it succeeded
      */
-    public function exportDBFooter($db)
+    public function exportDBFooter ($db)
     {
         return true;
     }
@@ -145,13 +157,11 @@ class ExportMediawiki extends ExportPlugin
     /**
      * Outputs CREATE DATABASE statement
      *
-     * @param string $db          Database name
-     * @param string $export_type 'server', 'database', 'table'
-     * @param string $db_alias    Aliases of db
+     * @param string $db Database name
      *
      * @return bool Whether it succeeded
      */
-    public function exportDBCreate($db, $export_type, $db_alias = '')
+    public function exportDBCreate($db)
     {
         return true;
     }
@@ -175,7 +185,6 @@ class ExportMediawiki extends ExportPlugin
      *                            parameter
      * @param bool   $do_mime     whether to include mime comments
      * @param bool   $dates       whether to include creation/update/check dates
-     * @param array  $aliases     Aliases of db/table/columns
      *
      * @return bool               Whether it succeeded
      */
@@ -189,24 +198,18 @@ class ExportMediawiki extends ExportPlugin
         $do_relation = false,
         $do_comments = false,
         $do_mime = false,
-        $dates = false,
-        $aliases = array()
+        $dates = false
     ) {
-        $db_alias = $db;
-        $table_alias = $table;
-        $this->initAlias($aliases, $db_alias, $table_alias);
-
-        $output = '';
         switch($export_mode) {
         case 'create_table':
-            $columns = $GLOBALS['dbi']->getColumns($db, $table);
+            $columns = PMA_DBI_get_columns($db, $table);
             $columns = array_values($columns);
             $row_cnt = count($columns);
 
             // Print structure comment
             $output = $this->_exportComment(
                 "Table structure for "
-                . PMA_Util::backquote($table_alias)
+                . PMA_Util::backquote($table)
             );
 
             // Begin the table construction
@@ -214,23 +217,17 @@ class ExportMediawiki extends ExportPlugin
                      . $this->_exportCRLF();
 
             // Add the table name
-            if (isset($GLOBALS['mediawiki_caption'])) {
-                $output .= "|+'''" . $table_alias . "'''" . $this->_exportCRLF();
+            if ($GLOBALS['mediawiki_caption']) {
+                $output .= "|+'''" . $table . "'''" . $this->_exportCRLF();
             }
 
             // Add the table headers
-            if (isset($GLOBALS['mediawiki_headers'])) {
+            if ($GLOBALS['mediawiki_headers']) {
                 $output .= "|- style=\"background:#ffdead;\"" . $this->_exportCRLF();
                 $output .= "! style=\"background:#ffffff\" | "
                     . $this->_exportCRLF();
                 for ($i = 0; $i < $row_cnt; ++$i) {
-                    $col_as = $columns[$i]['Field'];
-                    if (!empty($aliases[$db]['tables'][$table]['columns'][$col_as])
-                    ) {
-                        $col_as
-                            = $aliases[$db]['tables'][$table]['columns'][$col_as];
-                    }
-                    $output .= " | " . $col_as . $this->_exportCRLF();
+                    $output .= " | " . $columns[$i]['Field']. $this->_exportCRLF();
                 }
             }
 
@@ -274,7 +271,6 @@ class ExportMediawiki extends ExportPlugin
      * @param string $crlf      the end of line sequence
      * @param string $error_url the url to go back in case of error
      * @param string $sql_query SQL query for obtaining data
-     * @param array  $aliases   Aliases of db/table/columns
      *
      * @return bool             Whether it succeeded
      */
@@ -283,16 +279,11 @@ class ExportMediawiki extends ExportPlugin
         $table,
         $crlf,
         $error_url,
-        $sql_query,
-        $aliases = array()
+        $sql_query
     ) {
-        $db_alias = $db;
-        $table_alias = $table;
-        $this->initAlias($aliases, $db_alias, $table_alias);
-
         // Print data comment
         $output = $this->_exportComment(
-            "Table data for " . PMA_Util::backquote($table_alias)
+            "Table data for ". PMA_Util::backquote($table)
         );
 
         // Begin the table construction
@@ -302,39 +293,32 @@ class ExportMediawiki extends ExportPlugin
             . $this->_exportCRLF();
 
         // Add the table name
-        if (isset($GLOBALS['mediawiki_caption'])) {
-            $output .= "|+'''" . $table_alias . "'''" . $this->_exportCRLF();
+        if ($GLOBALS['mediawiki_caption']) {
+            $output .= "|+'''" . $table . "'''" . $this->_exportCRLF();
         }
 
         // Add the table headers
-        if (isset($GLOBALS['mediawiki_headers'])) {
+        if ($GLOBALS['mediawiki_headers']) {
             // Get column names
-            $column_names = $GLOBALS['dbi']->getColumnNames($db, $table);
+            $column_names = PMA_DBI_get_column_names($db, $table);
 
             // Add column names as table headers
-            if (! is_null($column_names) ) {
+            if ( ! is_null($column_names) ) {
                 // Use '|-' for separating rows
                 $output .= "|-" . $this->_exportCRLF();
 
                 // Use '!' for separating table headers
                 foreach ($column_names as $column) {
-                    if (!empty($aliases[$db]['tables'][$table]['columns'][$column])
-                    ) {
-                        $column
-                            = $aliases[$db]['tables'][$table]['columns'][$column];
-                    }
                     $output .= " ! " . $column . "" . $this->_exportCRLF();
                 }
             }
         }
 
         // Get the table data from the database
-        $result = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
-        $fields_cnt = $GLOBALS['dbi']->numFields($result);
+        $result = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
+        $fields_cnt = PMA_DBI_num_fields($result);
 
-        while ($row = $GLOBALS['dbi']->fetchRow($result)) {
+        while ($row = PMA_DBI_fetch_row($result)) {
             $output .= "|-" . $this->_exportCRLF();
 
             // Use '|' for separating table columns
@@ -377,3 +361,4 @@ class ExportMediawiki extends ExportPlugin
         return "\n";
     }
 }
+?>

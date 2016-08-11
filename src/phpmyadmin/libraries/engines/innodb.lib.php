@@ -9,45 +9,40 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
 /**
  * The InnoDB storage engine
  *
  * @package PhpMyAdmin-Engines
  */
-class PMA_StorageEngine_Innodb extends PMA_StorageEngine
+class PMA_StorageEngine_innodb extends PMA_StorageEngine
 {
     /**
      * Returns array with variable names related to InnoDB storage engine
      *
      * @return array   variable names
      */
-    public function getVariables()
+    function getVariables()
     {
         return array(
             'innodb_data_home_dir' => array(
                 'title' => __('Data home directory'),
-                'desc'  => __(
-                    'The common part of the directory path for all InnoDB data '
-                    . 'files.'
-                ),
+                'desc'  => __('The common part of the directory path for all InnoDB data files.'),
             ),
             'innodb_data_file_path' => array(
                 'title' => __('Data files'),
             ),
             'innodb_autoextend_increment' => array(
                 'title' => __('Autoextend increment'),
-                'desc'  => __(
-                    'The increment size for extending the size of an autoextending '
-                    . 'tablespace when it becomes full.'
-                ),
+                'desc'  => __('The increment size for extending the size of an autoextending tablespace when it becomes full.'),
                 'type'  => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
             ),
             'innodb_buffer_pool_size' => array(
                 'title' => __('Buffer pool size'),
-                'desc'  => __(
-                    'The size of the memory buffer InnoDB uses to cache data and '
-                    . 'indexes of its tables.'
-                ),
+                'desc'  => __('The size of the memory buffer InnoDB uses to cache data and indexes of its tables.'),
                 'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
             ),
             'innodb_additional_mem_pool_size' => array(
@@ -133,7 +128,7 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return string  SQL query LIKE pattern
      */
-    public function getVariablesLikePattern()
+    function getVariablesLikePattern()
     {
         return 'innodb\\_%';
     }
@@ -143,7 +138,7 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return array detail pages
      */
-    public function getInfoPages()
+    function getInfoPages()
     {
         if ($this->support < PMA_ENGINE_SUPPORT_YES) {
             return array();
@@ -159,7 +154,7 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return string  html table with stats
      */
-    public function getPageBufferpool()
+    function getPageBufferpool()
     {
         // The following query is only possible because we know
         // that we are on MySQL 5 here (checked above)!
@@ -168,7 +163,7 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
              SHOW STATUS
             WHERE Variable_name LIKE \'Innodb\\_buffer\\_pool\\_%\'
                OR Variable_name = \'Innodb_page_size\';';
-        $status = $GLOBALS['dbi']->fetchResult($sql, 0, 1);
+        $status = PMA_DBI_fetch_result($sql, 0, 1);
 
         $output = '<table class="data" id="table_innodb_bufferpool_usage">' . "\n"
             . '    <caption class="tblHeaders">' . "\n"
@@ -325,15 +320,33 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
     /**
      * returns InnoDB status
      *
-     * @return string  result of SHOW ENGINE INNODB STATUS inside pre tags
+     * @return string  result of SHOW INNODB STATUS inside pre tags
      */
-    public function getPageStatus()
+    function getPageStatus()
     {
         return '<pre id="pre_innodb_status">' . "\n"
-        . htmlspecialchars(
-            $GLOBALS['dbi']->fetchValue('SHOW ENGINE INNODB STATUS;', 0, 'Status')
-        ) . "\n"
-        . '</pre>' . "\n";
+            . htmlspecialchars(
+                PMA_DBI_fetch_value('SHOW INNODB STATUS;', 0, 'Status')
+            ) . "\n"
+            . '</pre>' . "\n";
+    }
+
+    /**
+     * Returns content for page $id
+     *
+     * @param string $id page id
+     *
+     * @return string html output
+     */
+    function getPage($id)
+    {
+        if (! array_key_exists($id, $this->getInfoPages())) {
+            return false;
+        }
+
+        $id = 'getPage' . $id;
+
+        return $this->$id();
     }
 
     /**
@@ -342,7 +355,7 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return string  mysql helppage filename
      */
-    public function getMysqlHelpPage()
+    function getMysqlHelpPage()
     {
         return 'innodb-storage-engine';
     }
@@ -355,9 +368,9 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return string the version number, or empty if not running as a plugin
      */
-    public function getInnodbPluginVersion()
+    function getInnodbPluginVersion()
     {
-        return $GLOBALS['dbi']->fetchValue('SELECT @@innodb_version;');
+        return PMA_DBI_fetch_value('SELECT @@innodb_version;');
     }
 
     /**
@@ -369,9 +382,9 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return string the InnoDB file format
      */
-    public function getInnodbFileFormat()
+    function getInnodbFileFormat()
     {
-        return $GLOBALS['dbi']->fetchValue(
+        return PMA_DBI_fetch_value(
             "SHOW GLOBAL VARIABLES LIKE 'innodb_file_format';", 0, 1
         );
     }
@@ -385,11 +398,12 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
      *
      * @return boolean whether this feature is supported or not
      */
-    public function supportsFilePerTable()
+    function supportsFilePerTable()
     {
-        if ($GLOBALS['dbi']->fetchValue(
+        $innodb_file_per_table = PMA_DBI_fetch_value(
             "SHOW GLOBAL VARIABLES LIKE 'innodb_file_per_table';", 0, 1
-        ) == 'ON') {
+        );
+        if ($innodb_file_per_table == 'ON') {
             return true;
         } else {
             return false;
@@ -398,3 +412,4 @@ class PMA_StorageEngine_Innodb extends PMA_StorageEngine
     }
 }
 
+?>

@@ -61,6 +61,19 @@ class ImportXml extends ImportPlugin
     }
 
     /**
+     * This method is called when any PluginManager to which the observer
+     * is attached calls PluginManager::notify()
+     *
+     * @param SplSubject $subject The PluginManager notifying the observer
+     *                            of an update.
+     *
+     * @return void
+     */
+    public function update (SplSubject $subject)
+    {
+    }
+
+    /**
      * Handles the whole import logic
      *
      * @return void
@@ -81,7 +94,7 @@ class ImportXml extends ImportPlugin
             $data = PMA_importGetNextChunk();
             if ($data === false) {
                 /* subtract data we didn't handle yet and stop processing */
-                $GLOBALS['offset'] -= strlen($buffer);
+                $offset -= strlen($buffer);
                 break;
             } elseif ($data === true) {
                 /* Handle rest of buffer */
@@ -193,16 +206,13 @@ class ImportXml extends ImportPlugin
         if (isset($namespaces['pma'])) {
             /**
              * Get structures for all tables
-             * @var SimpleXMLElement $struct
              */
             $struct = $xml->children($namespaces['pma']);
 
             $create = array();
 
-            /** @var SimpleXMLElement $val1 */
-            foreach ($struct as $val1) {
-                /** @var SimpleXMLElement $val2 */
-                foreach ($val1 as $val2) {
+            foreach ($struct as $tier1 => $val1) {
+                foreach ($val1 as $tier2 => $val2) {
                     // Need to select the correct database for the creation of
                     // tables, views, triggers, etc.
                     /**
@@ -244,23 +254,22 @@ class ImportXml extends ImportPlugin
             /**
              * Process all database content
              */
-            foreach ($xml as $v1) {
+            foreach ($xml as $k1 => $v1) {
                 $tbl_attr = $v1->attributes();
 
                 $isInTables = false;
-                $num_tables = count($tables);
-                for ($i = 0; $i < $num_tables; ++$i) {
+                for ($i = 0; $i < count($tables); ++$i) {
                     if (! strcmp($tables[$i][TBL_NAME], (string)$tbl_attr['name'])) {
                         $isInTables = true;
                         break;
                     }
                 }
 
-                if (!$isInTables) {
+                if ($isInTables == false) {
                     $tables[] = array((string)$tbl_attr['name']);
                 }
 
-                foreach ($v1 as $v2) {
+                foreach ($v1 as $k2 => $v2) {
                     $row_attr = $v2->attributes();
                     if (! array_search((string)$row_attr['name'], $tempRow)) {
                         $tempRow[] = (string)$row_attr['name'];
@@ -281,10 +290,9 @@ class ImportXml extends ImportPlugin
             /**
              * Bring accumulated rows into the corresponding table
              */
-            $num_tables = count($tables);
-            for ($i = 0; $i < $num_tables; ++$i) {
-                $num_rows = count($rows);
-                for ($j = 0; $j < $num_rows; ++$j) {
+            $num_tbls = count($tables);
+            for ($i = 0; $i < $num_tbls; ++$i) {
+                for ($j = 0; $j < count($rows); ++$j) {
                     if (! strcmp($tables[$i][TBL_NAME], $rows[$j][TBL_NAME])) {
                         if (! isset($tables[$i][COL_NAMES])) {
                             $tables[$i][] = $rows[$j][COL_NAMES];
@@ -308,6 +316,7 @@ class ImportXml extends ImportPlugin
         }
 
         unset($xml);
+        unset($tempRows);
         unset($tempCells);
         unset($rows);
 

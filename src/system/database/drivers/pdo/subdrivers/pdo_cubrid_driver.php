@@ -64,7 +64,7 @@ class CI_DB_pdo_cubrid_driver extends CI_DB_pdo_driver {
 	 *
 	 * @var	string
 	 */
-	protected $_escape_char = '';
+	protected $_escape_char = '`';
 
 	/**
 	 * ORDER BY random keyword

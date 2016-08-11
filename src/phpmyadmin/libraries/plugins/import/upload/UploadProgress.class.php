@@ -58,7 +58,7 @@ class UploadProgress implements UploadInterface
         }
         $ret = $_SESSION[$SESSION_KEY][$id];
 
-        if (! PMA_Import_progressCheck() || $ret['finished']) {
+        if (! PMA_import_progressCheck() || $ret['finished']) {
             return $ret;
         }
 
@@ -91,3 +91,4 @@ class UploadProgress implements UploadInterface
         return $ret;
     }
 }
+?>

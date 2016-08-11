@@ -1,0 +1,6 @@
+web:
+ image: recorder
+ ports:
+  - "8080:80"
+ volumes:
+  - "/Users/ruby/workspace/www/src:/var/www/html" 

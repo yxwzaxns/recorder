@@ -27,7 +27,7 @@ class PMA_ShapeFile extends ShapeFile
      *
      * @return boolean whether the 'dbase' extension is loaded
      */
-    private function _isDbaseLoaded()
+    function _isDbaseLoaded()
     {
         return extension_loaded('dbase');
     }
@@ -36,12 +36,12 @@ class PMA_ShapeFile extends ShapeFile
      * Loads ESRI shape data from the imported file
      *
      * @param string $FileName not used, it's here only to match the method
-     *                         signature of the method being overridden
+     *                         signature of the method being overidden
      *
      * @return void
      * @see ShapeFile::loadFromFile()
      */
-    public function loadFromFile($FileName)
+    function loadFromFile($FileName)
     {
         $this->_loadHeaders();
         $this->_loadRecords();
@@ -56,7 +56,7 @@ class PMA_ShapeFile extends ShapeFile
      * @return void
      * @see ShapeFile::_loadHeaders()
      */
-    public function _loadHeaders()
+    function _loadHeaders()
     {
         ImportShp::readFromBuffer(24);
         $this->fileLength = loadData("N", ImportShp::readFromBuffer(4));
@@ -78,10 +78,10 @@ class PMA_ShapeFile extends ShapeFile
     /**
      * Loads geometry data from the ESRI shape file
      *
-     * @return boolean|void
+     * @return void
      * @see ShapeFile::_loadRecords()
      */
-    public function _loadRecords()
+    function _loadRecords()
     {
         global $eof;
         ImportShp::readFromBuffer(32);
@@ -99,3 +99,4 @@ class PMA_ShapeFile extends ShapeFile
         }
     }
 }
+?>

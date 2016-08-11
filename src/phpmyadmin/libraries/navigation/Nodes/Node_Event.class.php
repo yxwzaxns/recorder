@@ -9,14 +9,12 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
-require_once 'libraries/navigation/Nodes/Node_DatabaseChild.class.php';
-
 /**
  * Represents a event node in the navigation tree
  *
  * @package PhpMyAdmin-Navigation
  */
-class Node_Event extends Node_DatabaseChild
+class Node_Event extends Node
 {
     /**
      * Initialises the class
@@ -25,6 +23,8 @@ class Node_Event extends Node_DatabaseChild
      * @param int    $type     Type of node, may be one of CONTAINER or OBJECT
      * @param bool   $is_group Whether this object has been created
      *                         while grouping nodes
+     *
+     * @return Node_Event
      */
     public function __construct($name, $type = Node::OBJECT, $is_group = false)
     {
@@ -33,22 +33,13 @@ class Node_Event extends Node_DatabaseChild
         $this->links = array(
             'text' => 'db_events.php?server=' . $GLOBALS['server']
                     . '&amp;db=%2$s&amp;item_name=%1$s&amp;edit_item=1'
-                    . '&amp;token=' . $_SESSION[' PMA_token '],
+                    . '&amp;token=' . $GLOBALS['token'],
             'icon' => 'db_events.php?server=' . $GLOBALS['server']
                     . '&amp;db=%2$s&amp;item_name=%1$s&amp;export_item=1'
-                    . '&amp;token=' . $_SESSION[' PMA_token ']
+                    . '&amp;token=' . $GLOBALS['token']
         );
         $this->classes = 'event';
     }
-
-    /**
-     * Returns the type of the item represented by the node.
-     *
-     * @return string type of the item
-     */
-    protected function getItemType()
-    {
-        return 'event';
-    }
 }
 
+?>

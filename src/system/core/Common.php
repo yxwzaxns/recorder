@@ -181,7 +181,7 @@ if ( ! function_exists('load_class'))
 		// Did we find the class?
 		if ($name === FALSE)
 		{
-			// Note: We use exit() rather then show_error() in order to avoid a
+			// Note: We use exit() rather than show_error() in order to avoid a
 			// self-referencing loop with the Exceptions class
 			set_status_header(503);
 			echo 'Unable to locate the specified class: '.$class.'.php';
@@ -430,6 +430,33 @@ if ( ! function_exists('show_error'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('show_message'))
+{
+	/**
+	 * Error Handler
+	 *
+	 * This function lets us invoke the exception class and
+	 * display errors using the standard error template located
+	 * in application/views/errors/error_general.php
+	 * This function will send the error page directly to the
+	 * browser and exit.
+	 *
+	 * @param	string
+	 * @param	int
+	 * @param	string
+	 * @return	void
+	 */
+	function show_message($message,$url="", $status_code = 302, $heading = 'An Message Was Encountered')
+	{
+		$status_code = abs($status_code);
+		$_msg =& load_class('Exceptions', 'core');
+		echo $_msg->show_message($heading, $message,$url,'message_general', $status_code);
+
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('show_404'))
 {
 	/**
@@ -506,6 +533,9 @@ if ( ! function_exists('set_status_header'))
 		{
 			is_int($code) OR $code = (int) $code;
 			$stati = array(
+				100	=> 'Continue',
+				101	=> 'Switching Protocols',
+
 				200	=> 'OK',
 				201	=> 'Created',
 				202	=> 'Accepted',
@@ -524,6 +554,7 @@ if ( ! function_exists('set_status_header'))
 
 				400	=> 'Bad Request',
 				401	=> 'Unauthorized',
+				402	=> 'Payment Required',
 				403	=> 'Forbidden',
 				404	=> 'Not Found',
 				405	=> 'Method Not Allowed',
@@ -673,7 +704,7 @@ if ( ! function_exists('_shutdown_handler'))
 	 * of CodeIgniter.php. The main reason we use this is to simulate
 	 * a complete custom exception handler.
 	 *
-	 * E_STRICT is purposivly neglected because such events may have
+	 * E_STRICT is purposively neglected because such events may have
 	 * been caught. Duplication or none? None is preferred for now.
 	 *
 	 * @link	http://insomanic.me.uk/post/229851073/php-trick-catching-fatal-errors-e-error-with-a
@@ -745,10 +776,15 @@ if ( ! function_exists('html_escape'))
 		{
 			return $var;
 		}
-		
+
 		if (is_array($var))
 		{
-			return array_map('html_escape', $var, array_fill(0, count($var), $double_encode));
+			foreach (array_keys($var) as $key)
+			{
+				$var[$key] = html_escape($var[$key], $double_encode);
+			}
+
+			return $var;
 		}
 
 		return htmlspecialchars($var, ENT_QUOTES, config_item('charset'), $double_encode);
@@ -829,19 +865,9 @@ if ( ! function_exists('function_usable'))
 		{
 			if ( ! isset($_suhosin_func_blacklist))
 			{
-				if (extension_loaded('suhosin'))
-				{
-					$_suhosin_func_blacklist = explode(',', trim(ini_get('suhosin.executor.func.blacklist')));
-
-					if ( ! in_array('eval', $_suhosin_func_blacklist, TRUE) && ini_get('suhosin.executor.disable_eval'))
-					{
-						$_suhosin_func_blacklist[] = 'eval';
-					}
-				}
-				else
-				{
-					$_suhosin_func_blacklist = array();
-				}
+				$_suhosin_func_blacklist = extension_loaded('suhosin')
+					? explode(',', trim(ini_get('suhosin.executor.func.blacklist')))
+					: array();
 			}
 
 			return ! in_array($function_name, $_suhosin_func_blacklist, TRUE);

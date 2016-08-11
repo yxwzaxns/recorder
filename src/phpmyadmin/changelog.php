@@ -33,10 +33,7 @@ if (is_readable($filename)) {
     }
 } else {
     printf(
-        __(
-            'The %s file is not available on this system, please visit '
-            . 'www.phpmyadmin.net for more information.'
-        ),
+        __('The %s file is not available on this system, please visit www.phpmyadmin.net for more information.'),
         $filename
     );
     exit;
@@ -52,7 +49,6 @@ $tracker_url_bug = 'https://sourceforge.net/p/phpmyadmin/bugs/\\1/';
 $tracker_url_rfe = 'https://sourceforge.net/p/phpmyadmin/feature-requests/\\1/';
 $tracker_url_patch = 'https://sourceforge.net/p/phpmyadmin/patches/\\1/';
 $github_url = 'https://github.com/phpmyadmin/phpmyadmin/';
-$faq_url = 'http://docs.phpmyadmin.net/en/latest/faq.html';
 
 $replaces = array(
     '@(http://[./a-zA-Z0-9.-_-]*[/a-zA-Z0-9_])@'
@@ -84,7 +80,7 @@ $replaces = array(
 
     // FAQ entries
     '/FAQ ([0-9]+)\.([0-9a-z]+)/i'
-    => '<a href="' . $faq_url . '#faq\\1-\\2">FAQ \\1.\\2</a>',
+    => '<a href="http://docs.phpmyadmin.net/en/latest/faq.html#faq\\1-\\2">FAQ \\1.\\2</a>',
 
     // linking bugs
     '/bug\s*#?([0-9]{6,})/i'
@@ -93,10 +89,6 @@ $replaces = array(
     // all other 6+ digit numbers are treated as bugs
     '/(?<!bug|RFE|patch) #?([0-9]{6,})/i'
     => '<a href="' . $tracker_url . '">bug #\\1</a>',
-
-    // GitHub issues
-    '/issue\s*#?([0-9]{4,5}) /i'
-    => '<a href="' . $github_url . 'issues/\\1">issue #\\1</a> ',
 
     // transitioned SF.net project bug/rfe/patch links
     // by the time we reach 6-digit numbers, we can probably retire the above links
@@ -115,7 +107,7 @@ $replaces = array(
 
     // PMASAentries
     '/(PMASA-[0-9]+-[0-9]+)/'
-    => '<a href="https://www.phpmyadmin.net/security/\\1/">\\1</a>',
+    => '<a href="http://www.phpmyadmin.net/home_page/security/\\1.php">\\1</a>',
 
     // Highlight releases (with links)
     '/([0-9]+)\.([0-9]+)\.([0-9]+)\.0 (\([0-9-]+\))/'

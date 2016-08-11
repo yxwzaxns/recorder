@@ -58,7 +58,21 @@ p {
 <body>
 	<div id="container">
 		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
+		<p><?php echo $message; ?></p>
+		<p>页面<b id="wait">5</b>秒后<a href="">返回</a></p>
 	</div>
+	<script type="text/javascript">
+		(function() {
+			var wait = document.getElementById('wait');
+				// href = document.getElementById('href').href;
+			var interval = setInterval(function() {
+				var time = --wait.innerHTML;
+				if (time <= 0) {
+					window.history.back(-1);
+					clearInterval(interval);
+				};
+			}, 1000);
+		})();
+	</script>
 </body>
 </html>

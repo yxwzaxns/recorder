@@ -211,7 +211,7 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 	 *
 	 * @param	string	$table
 	 * @return	string
-         */
+	 */
 	protected function _truncate($table)
 	{
 		return 'DELETE FROM '.$table;
@@ -257,7 +257,7 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 				.($this->qb_offset > 0 ? $this->qb_offset.' TO '.($this->qb_limit + $this->qb_offset) : $this->qb_limit);
 		}
 
-		return preg_replace('SELECTi', 'SELECT '.$select, $sql);
+		return preg_replace('`SELECT`i', 'SELECT '.$select, $sql);
 	}
 
 }

@@ -40,9 +40,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | 				 Sites using Latin-1 or UTF-8 database character set and collation are unaffected.
 |	['swap_pre'] A default table prefix that should be swapped with the dbprefix
 |	['encrypt']  Whether or not to use an encrypted connection.
+|
+|			'mysql' (deprecated), 'sqlsrv' and 'pdo/sqlsrv' drivers accept TRUE/FALSE
+|			'mysqli' and 'pdo/mysql' drivers accept an array with the following options:
+|
+|				'ssl_key'    - Path to the private key file
+|				'ssl_cert'   - Path to the public key certificate file
+|				'ssl_ca'     - Path to the certificate authority file
+|				'ssl_capath' - Path to a directory containing trusted CA certificats in PEM format
+|				'ssl_cipher' - List of *allowed* ciphers to be used for the encryption, separated by colons (':')
+|				'ssl_verify' - TRUE/FALSE; Whether verify the server certificate or not ('mysqli' only)
+|
 |	['compress'] Whether or not to use client compression (MySQL only)
 |	['stricton'] TRUE/FALSE - forces 'Strict Mode' connections
 |							- good for ensuring strict SQL while developing
+|	['ssl_options']	Used to set various SSL options that can be used when making SSL connections.
 |	['failover'] array - A array with 0 or more data for connections if the main should fail.
 |	['save_queries'] TRUE/FALSE - Whether to "save" all executed queries.
 | 				NOTE: Disabling this will also effectively disable both
@@ -59,36 +71,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 
-$active_group = 'default';
+$host = getenv('MYSQL_PORT_3306_TCP_ADDR')?getenv('MYSQL_PORT_3306_TCP_ADDR'):'192.168.0.101';
+$user = getenv('MYSQL_USERNAME')?getenv('MYSQL_USERNAME'):'root';
+$password = getenv('MYSQL_PASSWORD')?getenv('MYSQL_PASSWORD'):1234;
+$database = getenv('MYSQL_INSTANCE_NAME')?getenv('MYSQL_INSTANCE_NAME'):'sakura';
+
+$active_group = 'sakura';
 $query_builder = TRUE;
 
-// $db['default'] = array(
-// 	'dsn'	=> '',
-// 	'hostname' => '10.10.26.58',
-// 	'username' => 'uzKnglDude0MT3Bv',
-// 	'password' => 'pOPYZNj7nMJ5EcXAz',
-// 	'database' => 'uAEgiwXdkGbOQ5H0',
-// 	'dbdriver' => 'mysqli',
-// 	'dbprefix' => '',
-// 	'pconnect' => FALSE,
-// 	'db_debug' => TRUE,
-// 	'cache_on' => FALSE,
-// 	'cachedir' => '',
-// 	'char_set' => 'utf8',
-// 	'dbcollat' => 'utf8_general_ci',
-// 	'swap_pre' => '',
-// 	'encrypt' => FALSE,
-// 	'compress' => FALSE,
-// 	'stricton' => FALSE,
-// 	'failover' => array(),
-// 	'save_queries' => TRUE
-// );
-$host     = getenv('MYSQL_PORT_3306_TCP_ADDR')?getenv('MYSQL_PORT_3306_TCP_ADDR'):'localhost';
-$user     = getenv('MYSQL_USERNAME')?getenv('MYSQL_USERNAME'):'root';
-$password = getenv('MYSQL_PASSWORD')?getenv('MYSQL_PASSWORD'):1234;
-$database = getenv('MYSQL_INSTANCE_NAME')?getenv('MYSQL_INSTANCE_NAME'):'CI';
-
-$db['default'] = array(
+$db['sakura'] = array(
 	'dsn'	=> '',
 	'hostname' => $host,
 	'username' => $user,
@@ -97,7 +88,29 @@ $db['default'] = array(
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
-	'db_debug' => TRUE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+$db['recorder'] = array(
+	'dsn'	=> '',
+	'hostname' => $host,
+	'username' => $user,
+	'password' => $password,
+	'database' => 'recorder',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
 	'cachedir' => '',
 	'char_set' => 'utf8',

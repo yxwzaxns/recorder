@@ -254,7 +254,7 @@ if ( ! function_exists('word_censor'))
 	 * word you've submitted.
 	 *
 	 * @param	string	the text string
-	 * @param	string	the array of censoered words
+	 * @param	string	the array of censored words
 	 * @param	string	the optional replacement value
 	 * @return	string
 	 */
@@ -271,7 +271,7 @@ if ( ! function_exists('word_censor'))
 		// set for performance reasons. As a result words like über
 		// will not match on a word boundary. Instead, we'll assume that
 		// a bad word will be bookeneded by any of these characters.
-		$delim = '[-_\'\"(){}<>\[\]|!?@#%&,.:;^~*+=\/ 0-9\n\r\t]';
+		$delim = '[-_\'\"`(){}<>\[\]|!?@#%&,.:;^~*+=\/ 0-9\n\r\t]';
 
 		foreach ($censored as $badword)
 		{

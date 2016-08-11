@@ -37,13 +37,12 @@ PMA_noCacheHeader();
 <link href="../favicon.ico" rel="icon" type="image/x-icon" />
 <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <link href="styles.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../js/jquery/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery/jquery-ui-1.11.2.min.js">
-</script>
+<script type="text/javascript" src="../js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../js/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="../js/jquery/jquery.json-2.4.js"></script>
 <script type="text/javascript" src="ajax.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
 <script type="text/javascript" src="scripts.js"></script>
-<script type="text/javascript" src="../js/messages.php"></script>
 </head>
 <body>
 <h1><span class="blue">php</span><span class="orange">MyAdmin</span>  setup</h1>

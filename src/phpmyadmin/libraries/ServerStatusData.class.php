@@ -7,9 +7,7 @@
  * @package PhpMyAdmin
  */
 
-if (! defined('PHPMYADMIN')) {
-    exit;
-}
+require_once 'libraries/common.inc.php';
 
 /**
  * This class provides data about the server status
@@ -32,9 +30,8 @@ class PMA_ServerStatusData
     public $links;
     public $db_isLocal;
     public $section;
-    public $sectionUsed;
+    public $categoryUsed;
     public $selfUrl;
-    public $dataLoaded;
 
     /**
      * An empty setter makes the above properties read-only
@@ -50,13 +47,89 @@ class PMA_ServerStatusData
     }
 
     /**
-     * Gets the allocations for constructor
+     * Constructor
      *
-     * @return array
+     * @return object
      */
-    private function _getAllocations()
+    public function __construct()
     {
-        return array(
+        $this->selfUrl = basename($GLOBALS['PMA_PHP_SELF']);
+        /**
+         * get status from server
+         */
+        $server_status = PMA_DBI_fetch_result('SHOW GLOBAL STATUS', 0, 1);
+        if (PMA_DRIZZLE) {
+            // Drizzle doesn't put query statistics into variables, add it
+            $sql = "SELECT concat('Com_', variable_name), variable_value
+                FROM data_dictionary.GLOBAL_STATEMENTS";
+            $statements = PMA_DBI_fetch_result($sql, 0, 1);
+            $server_status = array_merge($server_status, $statements);
+        }
+
+        /**
+         * for some calculations we require also some server settings
+         */
+        $server_variables = PMA_DBI_fetch_result('SHOW GLOBAL VARIABLES', 0, 1);
+
+        /**
+         * cleanup of some deprecated values
+         */
+        $server_status = self::cleanDeprecated($server_status);
+
+        /**
+         * calculate some values
+         */
+        // Key_buffer_fraction
+        if (isset($server_status['Key_blocks_unused'])
+            && isset($server_variables['key_cache_block_size'])
+            && isset($server_variables['key_buffer_size'])
+        ) {
+            $server_status['Key_buffer_fraction_%']
+                = 100
+                - $server_status['Key_blocks_unused']
+                * $server_variables['key_cache_block_size']
+                / $server_variables['key_buffer_size']
+                * 100;
+        } elseif (isset($server_status['Key_blocks_used'])
+                && isset($server_variables['key_buffer_size'])) {
+            $server_status['Key_buffer_fraction_%']
+                = $server_status['Key_blocks_used']
+                * 1024
+                / $server_variables['key_buffer_size'];
+        }
+
+        // Ratio for key read/write
+        if (isset($server_status['Key_writes'])
+            && isset($server_status['Key_write_requests'])
+            && $server_status['Key_write_requests'] > 0
+        ) {
+            $server_status['Key_write_ratio_%']
+                = 100 * $server_status['Key_writes'] / $server_status['Key_write_requests'];
+        }
+
+        if (isset($server_status['Key_reads'])
+            && isset($server_status['Key_read_requests'])
+            && $server_status['Key_read_requests'] > 0
+        ) {
+            $server_status['Key_read_ratio_%']
+                = 100 * $server_status['Key_reads'] / $server_status['Key_read_requests'];
+        }
+
+        // Threads_cache_hitrate
+        if (isset($server_status['Threads_created'])
+            && isset($server_status['Connections'])
+            && $server_status['Connections'] > 0
+        ) {
+
+            $server_status['Threads_cache_hitrate_%']
+                = 100 - $server_status['Threads_created']
+                / $server_status['Connections'] * 100;
+        }
+
+        /**
+         * split variables in sections
+         */
+        $allocations = array(
             // variable name => section
             // variable names match when they begin with the given string
 
@@ -101,16 +174,8 @@ class PMA_ServerStatusData
             'Open_streams'      => 'files',
             'Opened_files'      => 'files',
         );
-    }
 
-    /**
-     * Gets the sections for constructor
-     *
-     * @return array
-     */
-    private function _getSections()
-    {
-        return array(
+        $sections = array(
             // section => section name (description)
             'com'           => 'Com',
             'query'         => __('SQL query'),
@@ -132,55 +197,35 @@ class PMA_ServerStatusData
             'ssl'           => 'SSL',
             'other'         => __('Other')
         );
-    }
 
-    /**
-     * Gets the links for constructor
-     *
-     * @return array
-     */
-    private function _getLinks()
-    {
-        $links = array();
+        /**
+         * define some needfull links/commands
+         */
         // variable or section name => (name => url)
+        $links = array();
 
-        $links['table'][__('Flush (close) all tables')] = $this->selfUrl
-            . PMA_URL_getCommon(
-                array(
-                    'flush' => 'TABLES'
-                )
-            );
+        $links['table'][__('Flush (close) all tables')]
+            = $this->selfUrl . '?flush=TABLES&amp;' . PMA_generate_common_url();
         $links['table'][__('Show open tables')]
-            = 'sql.php' . PMA_URL_getCommon(
-                array(
-                    'sql_query' => 'SHOW OPEN TABLES',
-                    'goto' => $this->selfUrl,
-                )
-            );
+            = 'sql.php?sql_query=' . urlencode('SHOW OPEN TABLES') .
+                '&amp;goto=' . $this->selfUrl . '&amp;' . PMA_generate_common_url();
 
-        if ($GLOBALS['replication_info']['master']['status']) {
+        if ($GLOBALS['server_master_status']) {
             $links['repl'][__('Show slave hosts')]
-                = 'sql.php' . PMA_URL_getCommon(
-                    array(
-                        'sql_query' => 'SHOW SLAVE HOSTS',
-                        'goto' => $this->selfUrl,
-                    )
-                );
+                = 'sql.php?sql_query=' . urlencode('SHOW SLAVE HOSTS')
+                    . '&amp;goto=' . $this->selfUrl . '&amp;'
+                    . PMA_generate_common_url();
             $links['repl'][__('Show master status')] = '#replication_master';
         }
-        if ($GLOBALS['replication_info']['slave']['status']) {
+        if ($GLOBALS['server_slave_status']) {
             $links['repl'][__('Show slave status')] = '#replication_slave';
         }
 
         $links['repl']['doc'] = 'replication';
 
         $links['qcache'][__('Flush query cache')]
-            = $this->selfUrl
-            . PMA_URL_getCommon(
-                array(
-                    'flush' => 'QUERY CACHE'
-                )
-            );
+            = $this->selfUrl . '?flush=' . urlencode('QUERY CACHE') . '&amp;' .
+                PMA_generate_common_url();
         $links['qcache']['doc'] = 'query_cache';
 
         $links['threads']['doc'] = 'mysql_threads';
@@ -192,169 +237,12 @@ class PMA_ServerStatusData
         $links['Slow_queries']['doc'] = 'slow_query_log';
 
         $links['innodb'][__('Variables')]
-            = 'server_engines.php?engine=InnoDB&amp;'
-            . PMA_URL_getCommon(array(), 'html', '');
+            = 'server_engines.php?engine=InnoDB&amp;' . PMA_generate_common_url();
         $links['innodb'][__('InnoDB Status')]
-            = 'server_engines.php'
-            . PMA_URL_getCommon(
-                array(
-                    'engine' => 'InnoDB',
-                    'page' => 'Status'
-                )
-            );
+            = 'server_engines.php?engine=InnoDB&amp;page=Status&amp;' .
+                PMA_generate_common_url();
         $links['innodb']['doc'] = 'innodb';
 
-        return($links);
-    }
-
-    /**
-     * Calculate some values
-     *
-     * @param array $server_status    contains results of SHOW GLOBAL STATUS
-     * @param array $server_variables contains results of SHOW GLOBAL VARIABLES
-     *
-     * @return array $server_status
-     */
-    private function _calculateValues($server_status, $server_variables)
-    {
-        // Key_buffer_fraction
-        if (isset($server_status['Key_blocks_unused'])
-            && isset($server_variables['key_cache_block_size'])
-            && isset($server_variables['key_buffer_size'])
-        ) {
-            $server_status['Key_buffer_fraction_%']
-                = 100
-                - $server_status['Key_blocks_unused']
-                * $server_variables['key_cache_block_size']
-                / $server_variables['key_buffer_size']
-                * 100;
-        } elseif (isset($server_status['Key_blocks_used'])
-            && isset($server_variables['key_buffer_size'])
-        ) {
-            $server_status['Key_buffer_fraction_%']
-                = $server_status['Key_blocks_used']
-                * 1024
-                / $server_variables['key_buffer_size'];
-        }
-
-        // Ratio for key read/write
-        if (isset($server_status['Key_writes'])
-            && isset($server_status['Key_write_requests'])
-            && $server_status['Key_write_requests'] > 0
-        ) {
-            $key_writes = $server_status['Key_writes'];
-            $key_write_requests = $server_status['Key_write_requests'];
-            $server_status['Key_write_ratio_%']
-                = 100 * $key_writes / $key_write_requests;
-        }
-
-        if (isset($server_status['Key_reads'])
-            && isset($server_status['Key_read_requests'])
-            && $server_status['Key_read_requests'] > 0
-        ) {
-            $key_reads = $server_status['Key_reads'];
-            $key_read_requests = $server_status['Key_read_requests'];
-            $server_status['Key_read_ratio_%']
-                = 100 * $key_reads / $key_read_requests;
-        }
-
-        // Threads_cache_hitrate
-        if (isset($server_status['Threads_created'])
-            && isset($server_status['Connections'])
-            && $server_status['Connections'] > 0
-        ) {
-
-            $server_status['Threads_cache_hitrate_%']
-                = 100 - $server_status['Threads_created']
-                / $server_status['Connections'] * 100;
-        }
-        return $server_status;
-    }
-
-    /**
-     * Sort variables into arrays
-     *
-     * @param array $server_status contains results of SHOW GLOBAL STATUS
-     * @param array $allocations   allocations for sections
-     * @param array $allocationMap map variables to their section
-     * @param array $sectionUsed   is a section used?
-     * @param array $used_queries  used queries
-     *
-     * @return array ($allocationMap, $sectionUsed, $used_queries)
-     */
-    private function _sortVariables(
-        $server_status, $allocations, $allocationMap, $sectionUsed,
-        $used_queries
-    ) {
-        foreach ($server_status as $name => $value) {
-            $section_found = false;
-            foreach ($allocations as $filter => $section) {
-                if (/*overload*/mb_strpos($name, $filter) !== false) {
-                    $allocationMap[$name] = $section;
-                    $sectionUsed[$section] = true;
-                    $section_found = true;
-                    if ($section == 'com' && $value > 0) {
-                        $used_queries[$name] = $value;
-                    }
-                    break; // Only exits inner loop
-                }
-            }
-            if (! $section_found) {
-                $allocationMap[$name] = 'other';
-                $sectionUsed['other'] = true;
-            }
-        }
-        return array($allocationMap, $sectionUsed, $used_queries);
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->selfUrl = basename($GLOBALS['PMA_PHP_SELF']);
-
-        // get status from server
-        $server_status_result = $GLOBALS['dbi']->tryQuery('SHOW GLOBAL STATUS');
-        $server_status = array();
-        if ($server_status_result === false) {
-            $this->dataLoaded = false;
-        } else {
-            $this->dataLoaded = true;
-            while ($arr = $GLOBALS['dbi']->fetchRow($server_status_result)) {
-                $server_status[$arr[0]] = $arr[1];
-            }
-            $GLOBALS['dbi']->freeResult($server_status_result);
-        }
-
-        if (PMA_DRIZZLE) {
-            // Drizzle doesn't put query statistics into variables, add it
-            $sql = "SELECT concat('Com_', variable_name), variable_value "
-                . "FROM data_dictionary.GLOBAL_STATEMENTS";
-            $statements = $GLOBALS['dbi']->fetchResult($sql, 0, 1);
-            $server_status = array_merge($server_status, $statements);
-        }
-
-        // for some calculations we require also some server settings
-        $server_variables = $GLOBALS['dbi']->fetchResult(
-            'SHOW GLOBAL VARIABLES', 0, 1
-        );
-
-        // cleanup of some deprecated values
-        $server_status = self::cleanDeprecated($server_status);
-
-        // calculate some values
-        $server_status = $this->_calculateValues(
-            $server_status, $server_variables
-        );
-
-        // split variables in sections
-        $allocations = $this->_getAllocations();
-
-        $sections = $this->_getSections();
-
-        // define some needful links/commands
-        $links = $this->_getLinks();
 
         // Variable to contain all com_ variables (query statistics)
         $used_queries = array();
@@ -364,18 +252,30 @@ class PMA_ServerStatusData
         $allocationMap = array();
 
         // Variable to mark used sections
-        $sectionUsed = array();
+        $categoryUsed = array();
 
         // sort vars into arrays
-        list(
-            $allocationMap, $sectionUsed, $used_queries
-        ) = $this->_sortVariables(
-            $server_status, $allocations, $allocationMap, $sectionUsed,
-            $used_queries
-        );
+        foreach ($server_status as $name => $value) {
+            $section_found = false;
+            foreach ($allocations as $filter => $section) {
+                if (strpos($name, $filter) !== false) {
+                    $allocationMap[$name] = $section;
+                    $categoryUsed[$section] = true;
+                    $section_found = true;
+                    if ($section == 'com' && $value > 0) {
+                        $used_queries[$name] = $value;
+                    }
+                    break; // Only exits inner loop
+                }
+            }
+            if (!$section_found) {
+                $allocationMap[$name] = 'other';
+                $categoryUsed['other'] = true;
+            }
+        }
 
         if (PMA_DRIZZLE) {
-            $used_queries = $GLOBALS['dbi']->fetchResult(
+            $used_queries = PMA_DBI_fetch_result(
                 'SELECT * FROM data_dictionary.global_statements',
                 0,
                 1
@@ -389,10 +289,7 @@ class PMA_ServerStatusData
 
         // Set all class properties
         $this->db_isLocal = false;
-        $serverHostToLower = /*overload*/mb_strtolower(
-            $GLOBALS['cfg']['Server']['host']
-        );
-        if ($serverHostToLower === 'localhost'
+        if (strtolower($GLOBALS['cfg']['Server']['host']) === 'localhost'
             || $GLOBALS['cfg']['Server']['host'] === '127.0.0.1'
             || $GLOBALS['cfg']['Server']['host'] === '::1'
         ) {
@@ -404,7 +301,7 @@ class PMA_ServerStatusData
         $this->used_queries = $used_queries;
         $this->allocationMap = $allocationMap;
         $this->links = $links;
-        $this->sectionUsed = $sectionUsed;
+        $this->categoryUsed = $categoryUsed;
     }
 
     /**
@@ -430,21 +327,17 @@ class PMA_ServerStatusData
     }
 
     /**
-     * Generates menu HTML
+     * cleanup of some deprecated values
      *
-     * @return string
+     * @return array
      */
     public function getMenuHtml()
     {
-        $url_params = PMA_URL_getCommon();
+        $url_params = PMA_generate_common_url();
         $items = array(
             array(
                 'name' => __('Server'),
                 'url' => 'server_status.php'
-            ),
-            array(
-                'name' => __('Processes'),
-                'url' => 'server_status_processes.php'
             ),
             array(
                 'name' => __('Query statistics'),
@@ -472,7 +365,7 @@ class PMA_ServerStatusData
             }
             $retval .= '<li>';
             $retval .= '<a' . $class;
-            $retval .= ' href="' . $item['url'] . $url_params . '">';
+            $retval .= ' href="' . $item['url'] . '?' . $url_params . '">';
             $retval .= $item['name'];
             $retval .= '</a>';
             $retval .= '</li>';
@@ -482,39 +375,6 @@ class PMA_ServerStatusData
 
         return $retval;
     }
-
-    /**
-     * Builds a <select> list for refresh rates
-     *
-     * @param string $name         Name of select
-     * @param int    $defaultRate  Currently chosen rate
-     * @param array  $refreshRates List of refresh rates
-     *
-     * @return string
-     */
-    public static function getHtmlForRefreshList($name,
-        $defaultRate = 5,
-        $refreshRates = Array(1, 2, 5, 10, 20, 40, 60, 120, 300, 600)
-    ) {
-        $return = '<select name="' . $name . '" id="id_' . $name
-            . '" class="refreshRate">';
-        foreach ($refreshRates as $rate) {
-            $selected = ($rate == $defaultRate)?' selected="selected"':'';
-            $return .= '<option value="' . $rate . '"' . $selected . '>';
-            if ($rate < 60) {
-                $return .= sprintf(
-                    _ngettext('%d second', '%d seconds', $rate), $rate
-                );
-            } else {
-                $rate = $rate / 60;
-                $return .= sprintf(
-                    _ngettext('%d minute', '%d minutes', $rate), $rate
-                );
-            }
-            $return .=  '</option>';
-        }
-        $return .= '</select>';
-        return $return;
-    }
 }
 
+?>

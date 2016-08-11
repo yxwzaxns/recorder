@@ -20,9 +20,6 @@ require_once './libraries/List_Database.class.php';
  * phpMyAdmin main Controller
  *
  * @package PhpMyAdmin
- *
- * @property resource $userlink
- * @property resource $controllink
  */
 class PMA
 {
@@ -60,10 +57,13 @@ class PMA
         switch ($param) {
         case 'databases' :
             return $this->getDatabaseList();
+            break;
         case 'userlink' :
             return $this->userlink;
+            break;
         case 'controllink' :
             return $this->controllink;
+            break;
         }
 
         return null;
@@ -93,16 +93,18 @@ class PMA
     /**
      * Accessor to PMA::$databases
      *
-     * @return PMA_List_Database
+     * @return PMA_List_Databases
      */
     public function getDatabaseList()
     {
         if (null === $this->databases) {
             $this->databases = new PMA_List_Database(
-                $this->userlink
+                $this->userlink,
+                $this->controllink
             );
         }
 
         return $this->databases;
     }
 }
+?>

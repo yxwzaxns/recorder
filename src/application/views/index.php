@@ -3,10 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>学生出勤记录系统</title>
-	<link rel="stylesheet" type="text/css" href="/public/bootstrap/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/public/bootstrap/css/bootstrap-theme.css"/>
-	<script type="text/javascript" src="/public/js/jquery.js"></script>
-	<script type="text/javascript" src="/public/bootstrap/js/bootstrap.js"></script>
+	<link rel="stylesheet" type="text/css" href="/public/source/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/public/source/bootstrap/css/bootstrap-theme.css"/>
+	<script type="text/javascript" src="/public/source/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/public/source/bootstrap/js/bootstrap.js"></script>
 <style type="text/css">
 body {
 	margin: 0px;
@@ -14,6 +14,9 @@ body {
 	background:#fff;
 
 
+}
+header{
+	background-color: #000;
 }
 #carousel-example-generic{
 	width: 1170px;
@@ -27,11 +30,24 @@ section{
 .bad_list{
 	margin-top: 5px;
 }
+footer{
+	height: 100px;
+	width: 100%;
+	background-color: #000;
+}
+footer section span{
+	display: block;
+	width: 100%;
+	font-size: 16px;
+	font-weight: 300;
+	color: #fff;
+	text-align: center;
+}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.login').click(function(){
-			$.post("/index.php/welcome/login",$('#formlogin').serialize(),function(data){
+			$.post("/func/login",$('#formlogin').serialize(),function(data){
 				if(data['status']==1){
 					top.location.href=data['path'];
 					//alert(top.location.href);
@@ -75,6 +91,7 @@ section{
 </script>
 </head>
 <body>
+	<!-- header -->
 	<header>
 		<nav class="navbar navbar-inverse">
 	        <div class="container">
@@ -93,49 +110,47 @@ section{
 	              <li><a href="#about">新闻</a></li>
 	              <li><a href="#contact">通告</a></li>
 	              <li class="dropdown">
-	                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+	                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">常用下载<span class="caret"></span></a>
 	                <ul class="dropdown-menu">
-	                  <li><a href="#">Action</a></li>
-	                  <li><a href="#">Another action</a></li>
-	                  <li><a href="#">Something else here</a></li>
-	                  <li role="separator" class="divider"></li>
-	                  <li class="dropdown-header">Nav header</li>
-	                  <li><a href="#">Separated link</a></li>
-	                  <li><a href="#">One more separated link</a></li>
+	                  <li><a href="http://metc.guet.edu.cn/upfiles/download/ipclient.exe">IpClient出校器下载</a></li>
 	                </ul>
 	              </li>
 	            </ul>
 	          </div><!--/.nav-collapse -->
 	        </div>
       	</nav>
-
-      <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-          <div class="item active">
-            <img src="/public/images/1.jpg" alt="First slide">
-          </div>
-          <div class="item">
-            <img src="/public/images/2.jpg" alt="Second slide">
-          </div>
-          <div class="item">
-            <img src="/public/images/3.jpg" alt="Third slide">
-          </div>
-        </div>
-        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
-      </div>
 	</header>
+	<!-- //header -->
+	<!-- banner -->
+	<section>
+		<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+			<ol class="carousel-indicators">
+				<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+			</ol>
+			<div class="carousel-inner" role="listbox">
+				<div class="item active">
+					<img src="/public/own/images/1.jpg" alt="First slide">
+				</div>
+				<div class="item">
+					<img src="/public/own/images/2.jpg" alt="Second slide">
+				</div>
+				<div class="item">
+					<img src="/public/own/images/3.jpg" alt="Third slide">
+				</div>
+			</div>
+			<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+	</section>
+	<!-- //banner -->
 	<section>
 		<div class="container">
 			<div class="row">
@@ -211,6 +226,20 @@ section{
 		</div>
 	</section>
 <!-- footer -->
+<footer>
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<span>&copy 2016 版权所有 桂林电子科技大学</span>
+					<span>友情链接: <a href="http://www.guet.edu.cn">桂林电子科技大学</a> <a href="3">桂林电子科技大学信息与通信学院</a></span>
+				</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</footer>
+<!-- //footer -->
 	<!-- jq pop -->
 	<!-- pop login -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

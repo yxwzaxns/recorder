@@ -71,11 +71,24 @@ class ExportYaml extends ExportPlugin
     }
 
     /**
+     * This method is called when any PluginManager to which the observer
+     * is attached calls PluginManager::notify()
+     *
+     * @param SplSubject $subject The PluginManager notifying the observer
+     *                            of an update.
+     *
+     * @return void
+     */
+    public function update (SplSubject $subject)
+    {
+    }
+
+    /**
      * Outputs export header
      *
      * @return bool Whether it succeeded
      */
-    public function exportHeader()
+    public function exportHeader ()
     {
         PMA_exportOutputHandler(
             '%YAML 1.1' . $GLOBALS['crlf'] . '---' . $GLOBALS['crlf']
@@ -88,7 +101,7 @@ class ExportYaml extends ExportPlugin
      *
      * @return bool Whether it succeeded
      */
-    public function exportFooter()
+    public function exportFooter ()
     {
         PMA_exportOutputHandler('...' . $GLOBALS['crlf']);
         return true;
@@ -97,12 +110,11 @@ class ExportYaml extends ExportPlugin
     /**
      * Outputs database header
      *
-     * @param string $db       Database name
-     * @param string $db_alias Aliases of db
+     * @param string $db Database name
      *
      * @return bool Whether it succeeded
      */
-    public function exportDBHeader($db, $db_alias = '')
+    public function exportDBHeader ($db)
     {
         return true;
     }
@@ -114,7 +126,7 @@ class ExportYaml extends ExportPlugin
      *
      * @return bool Whether it succeeded
      */
-    public function exportDBFooter($db)
+    public function exportDBFooter ($db)
     {
         return true;
     }
@@ -122,13 +134,11 @@ class ExportYaml extends ExportPlugin
     /**
      * Outputs CREATE DATABASE statement
      *
-     * @param string $db          Database name
-     * @param string $export_type 'server', 'database', 'table'
-     * @param string $db_alias    Aliases of db
+     * @param string $db Database name
      *
      * @return bool Whether it succeeded
      */
-    public function exportDBCreate($db, $export_type, $db_alias = '')
+    public function exportDBCreate($db)
     {
         return true;
     }
@@ -141,38 +151,27 @@ class ExportYaml extends ExportPlugin
      * @param string $crlf      the end of line sequence
      * @param string $error_url the url to go back in case of error
      * @param string $sql_query SQL query for obtaining data
-     * @param array  $aliases   Aliases of db/table/columns
      *
      * @return bool Whether it succeeded
      */
-    public function exportData(
-        $db, $table, $crlf, $error_url, $sql_query, $aliases = array()
-    ) {
-        $db_alias = $db;
-        $table_alias = $table;
-        $this->initAlias($aliases, $db_alias, $table_alias);
-        $result = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
+    public function exportData($db, $table, $crlf, $error_url, $sql_query)
+    {
+        $result = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
 
-        $columns_cnt = $GLOBALS['dbi']->numFields($result);
-        $columns = array();
+        $columns_cnt = PMA_DBI_num_fields($result);
         for ($i = 0; $i < $columns_cnt; $i++) {
-            $col_as = $GLOBALS['dbi']->fieldName($result, $i);
-            if (!empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
-                $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
-            }
-            $columns[$i] = stripslashes($col_as);
+            $columns[$i] = stripslashes(PMA_DBI_field_name($result, $i));
         }
+        unset($i);
 
         $buffer = '';
         $record_cnt = 0;
-        while ($record = $GLOBALS['dbi']->fetchRow($result)) {
+        while ($record = PMA_DBI_fetch_row($result)) {
             $record_cnt++;
 
             // Output table name as comment if this is the first record of the table
             if ($record_cnt == 1) {
-                $buffer = '# ' . $db_alias . '.' . $table_alias . $crlf;
+                $buffer = '# ' . $db . '.' . $table . $crlf;
                 $buffer .= '-' . $crlf;
             } else {
                 $buffer = '-' . $crlf;
@@ -183,13 +182,15 @@ class ExportYaml extends ExportPlugin
                     continue;
                 }
 
+                $column = $columns[$i];
+
                 if (is_null($record[$i])) {
-                    $buffer .= '  ' . $columns[$i] . ': null' . $crlf;
+                    $buffer .= '  ' . $column . ': null' . $crlf;
                     continue;
                 }
 
                 if (is_numeric($record[$i])) {
-                    $buffer .= '  ' . $columns[$i] . ': '  . $record[$i] . $crlf;
+                    $buffer .= '  ' . $column . ': '  . $record[$i] . $crlf;
                     continue;
                 }
 
@@ -198,15 +199,16 @@ class ExportYaml extends ExportPlugin
                     array('\\\\', '\"', '\n', '\r'),
                     $record[$i]
                 );
-                $buffer .= '  ' . $columns[$i] . ': "' . $record[$i] . '"' . $crlf;
+                $buffer .= '  ' . $column . ': "' . $record[$i] . '"' . $crlf;
             }
 
             if (! PMA_exportOutputHandler($buffer)) {
                 return false;
             }
         }
-        $GLOBALS['dbi']->freeResult($result);
+        PMA_DBI_free_result($result);
 
         return true;
     } // end getTableYAML
 }
+?>

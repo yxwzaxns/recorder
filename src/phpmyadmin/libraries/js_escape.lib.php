@@ -78,16 +78,14 @@ function PMA_formatJsVal($value)
     if (is_bool($value)) {
         if ($value) {
             return 'true';
+        } else {
+            return 'false';
         }
-
-        return 'false';
-    }
-
-    if (is_int($value)) {
+    } elseif (is_int($value)) {
         return (int)$value;
+    } else {
+        return '"' . PMA_escapeJsString($value) . '"';
     }
-
-    return '"' . PMA_escapeJsString($value) . '"';
 }
 
 /**
@@ -132,45 +130,4 @@ function PMA_printJsValue($key, $value)
     echo PMA_getJsValue($key, $value);
 }
 
-/**
- * Formats javascript assignment for form validation api
- * with proper escaping of a value.
- *
- * @param string  $key   Name of value to set
- * @param string  $value Value to set
- * @param boolean $addOn Check if $.validator.format is required or not
- * @param boolean $comma Check if comma is required
- *
- * @return string Javascript code.
- */
-function PMA_getJsValueForFormValidation($key, $value, $addOn, $comma)
-{
-    $result = $key . ': ';
-    if ($addOn) {
-        $result .= '$.validator.format(';
-    }
-    $result .= PMA_formatJsVal($value);
-    if ($addOn) {
-        $result .= ')';
-    }
-    if ($comma) {
-        $result .= ', ';
-    }
-    return $result;
-}
-
-/**
- * Prints javascript assignment for form validation api
- * with proper escaping of a value.
- *
- * @param string  $key   Name of value to set
- * @param string  $value Value to set
- * @param boolean $addOn Check if $.validator.format is required or not
- * @param boolean $comma Check if comma is required
- *
- * @return void
- */
-function PMA_printJsValueForFormValidation($key, $value, $addOn=false, $comma=true)
-{
-    echo PMA_getJsValueForFormValidation($key, $value, $addOn, $comma);
-}
+?>

@@ -60,6 +60,19 @@ class ImportShp extends ImportPlugin
     }
 
     /**
+     * This method is called when any PluginManager to which the observer
+     * is attached calls PluginManager::notify()
+     *
+     * @param SplSubject $subject The PluginManager notifying the observer
+     *                            of an update.
+     *
+     * @return void
+     */
+    public function update (SplSubject $subject)
+    {
+    }
+
+    /**
      * Handles the whole import logic
      *
      * @return void
@@ -67,9 +80,17 @@ class ImportShp extends ImportPlugin
     public function doImport()
     {
         global $db, $error, $finished, $compression,
-            $import_file, $local_import_file, $message;
+            $import_file, $local_import_file;
+
+        if ((int) ini_get('memory_limit') < 512) {
+            @ini_set('memory_limit', '512M');
+        }
+        @set_time_limit(300);
 
         $GLOBALS['finished'] = false;
+        $buffer = '';
+        $eof = false;
+
 
         $shp = new PMA_ShapeFile(1);
         // If the zip archive has more than one file,
@@ -107,10 +128,8 @@ class ImportShp extends ImportPlugin
                         $temp_dbf_file = true;
                         // Replace the .dbf with .*, as required
                         // by the bsShapeFiles library.
-                        $file_name = /*overload*/mb_substr(
-                            $dbf_file_path,
-                            0,
-                            /*overload*/mb_strlen($dbf_file_path) - 4
+                        $file_name = substr(
+                            $dbf_file_path, 0, strlen($dbf_file_path) - 4
                         ) . '.*';
                         $shp->FileName = $file_name;
                     }
@@ -123,11 +142,8 @@ class ImportShp extends ImportPlugin
                 // to load extra data.
                 // Replace the .shp with .*,
                 // so the bsShapeFiles library correctly locates .dbf file.
-                $file_name = /*overload*/mb_substr(
-                    $import_file,
-                    0,
-                    /*overload*/mb_strlen($import_file) - 4
-                ) . '.*';
+                $file_name = substr($import_file, 0, strlen($import_file) - 4)
+                    . '.*';
                 $shp->FileName = $file_name;
             }
         }
@@ -194,21 +210,20 @@ class ImportShp extends ImportPlugin
                 $message = PMA_Message::error(
                     __(
                         'You tried to import an invalid file or the imported file'
-                        . ' contains invalid data!'
+                        . ' contains invalid data'
                     )
                 );
             } else {
                 $message = PMA_Message::error(
                     __('MySQL Spatial Extension does not support ESRI type "%s".')
                 );
-                $message->addParam($esri_types[$shp->shapeType]);
+                $message->addParam($param);
             }
             return;
         }
 
         if (isset($gis_type)) {
-            include_once './libraries/gis/GIS_Factory.class.php';
-            /** @var PMA_GIS_Multilinestring|PMA_GIS_Multipoint|PMA_GIS_Point|PMA_GIS_Polygon $gis_obj */
+            include_once './libraries/gis/pma_gis_factory.php';
             $gis_obj =  PMA_GIS_Factory::factory($gis_type);
         } else {
             $gis_obj = null;
@@ -248,7 +263,7 @@ class ImportShp extends ImportPlugin
         if (count($rows) == 0) {
             $error = true;
             $message = PMA_Message::error(
-                __('The imported file does not contain any data!')
+                __('The imported file does not contain any data')
             );
             return;
         }
@@ -261,9 +276,9 @@ class ImportShp extends ImportPlugin
         }
 
         // Set table name based on the number of tables
-        if (/*overload*/mb_strlen($db)) {
-            $result = $GLOBALS['dbi']->fetchResult('SHOW TABLES');
-            $table_name = 'TABLE ' . (count($result) + 1);
+        if (strlen($db)) {
+            $result = PMA_DBI_fetch_result('SHOW TABLES');
+            $table_name = 'TABLE '.(count($result) + 1);
         } else {
             $table_name = 'TBL_NAME';
         }
@@ -278,7 +293,7 @@ class ImportShp extends ImportPlugin
         $analyses[$table_no][FORMATTEDSQL][$spatial_col] = true;
 
         // Set database name to the currently selected one, if applicable
-        if (/*overload*/mb_strlen($db)) {
+        if (strlen($db)) {
             $db_name = $db;
             $options = array('create_db' => false);
         } else {

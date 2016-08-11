@@ -1,487 +1,379 @@
 phpMyAdmin - ChangeLog
 ======================
 
-4.5.0.2 (2015-09-25)
-- issue #11497 Incorrect indexes when exporting
+4.0.10.11 (2015-09-23)
+- issue #11464 phpMyAdmin suggests upgrading to newer version not usable on that system
 
-4.5.0.1 (2015-09-24)
-- issue #11492 AUTO_INCREMENT statements are partly missing from exports
-
-4.5.0.0 (2015-09-23)
-+ rfe          Pagination for GIS visualization
-+ issue #6207  Usability improvements for console
-+ issue #6310  Access to Add columns text-box and Go button when creating table
-+ issue #6007  Add lock tables, disable keys options
-+ issue #6306  Additional page locking
-+ issue #6314  Support MySQL 5.7 syntax for password change
-+ issue #6319  Display/edit index name
-+ issue #6318  Toggle autocomplete of table and column names
-+ issue #5633  Manage multiple variable in bookmarked query
-+ issue #5642  Show edit/delete also when there is calculated column
-+ issue #6313  Show databases as list instead of as dropdown when no database is selected
-+ rfe          Optional dark theme for the console
-+ issue #5053  PDF schema sort options
-+ issue #5543  Structure in PDF export
-+ issue #6327  Have ZeroConf create phpmyadmin DB if possible
-+ issue #5462  Warning before silent data conversion/truncation
-+ issue #6338  Support a default page in designer
-+ issue #6339  Allow copying mutiple rows
-+ issue #6334  No SQL query for loading data
-+ issue #6341  New data validation feature and datetime type
-+ issue #6324  Importing and exporting pMA meta-data
-+ issue #6330  Add grouping to stored procedures in the navigation tree
-+ issue #6275  Support IPv6 browser transformation
-+ rfe          Option groups for 'With selected' dropdown in database structure page
-+ issue #6347  Support CHECKSUM TABLE operation
-+ issue #6088  Support for Paramaters with raw SQL
-+ issue #5844  Show original size of truncated columns
-+ issue #6114  Explain analyzer
-+ issue #6186  Add "Drop partition" option to partition tools
-+ issue #6354  Procedures window shift-click should select multiple rows
-+ issue #6355  Designer: "Sticky" menu option
-+ issue #6357  Directly show table comments in structure view
-+ issue #6259  Page-related settings
-+ issue #5356  Alter privileges when renaming or copying a database
-- issue #11256 Slowness due to large number of routines
-- issue #11258 GROUP_CONCAT shown as GROUPBY_CONCAT in CodeMirror autocomplete
-+ issue #5946  Work with --skip-grant-tables
-- issue #11266 "Sort by key" drop-down value is lost
-+ issue #6287  Browse: improve display of right-aligned data
-- issue #11265 Textarea rows settings ignored Features > Text fields
-+ issue #6358  MIME types should be lower case
-- issue #11226 Drop table doesn't remove the table name from navigation bar
-+ issue #6360  MySQL and MariaDB functions INET6_ATON and INET6_NTOA
-- bug          Link to get real row counts of all the views in a db, at once
-- issue #11275 Drizzle version numbers
-+ issue #5400  Rewrite print view using CSS; fixes print view failures on multi-query statements
-+ issue #6362  Support spatial indexes in table create form
-+ issue #6068  Use CTRL or ALT plus arrow keys for navigation in grid editor
-+ rfe          Remove support for Shift + Click on function name to apply to all rows in insert/edit page
-+ issue #6326  Don't group tables in tree if the result has only one group
-- issue #11287 When hide table structure actions is false, action should be in a row
-+ issue #5425  Batch changing the collation of each column in a table
-- issue #10918 QBE generates wrong query
-+ issue #6292  Use plain English descriptors instead of script names for icon link destinations
-+ issue #6239  Disable foreign key checks for some operations
-- issue #11296 "With selected" links doesn't work in table browse
-- issue #11166 Query builder: missing joint for the intermediary table
-+ issue #6251  Integrate SQL debugging into console
-- issue #11061 Improve/restore non-unique index row editing
-- issue #11301 MySQL errors are not shown when DebugSQL is enabled
-+ issue #5037  One file per table and one file per database export option
-+ issue #5759  Designer settings should be part of saved state
-+ issue #6257  Option to remove functions, procedures, etc., from navigation tree
-+ issue #5388  Column privileges and update
-+ issue #6231  Cant use external config file
-+ issue #6252  CSV import: Allow "Columns escaped with" to be optional
-+ issue #6262  Being able to use multiple servers at the same time when using cookie auth
-+ issue #6301  select structure or data for each table when exporting
-- issue #11261 Autocomplete completes the original table name when joining multiple aliased tables
-+ rfe          Remove configuration storage data related to a user upon deleting the user
-+ issue #6298  Improved processlist for mariadb
-+ issue #6300  Warn about "Any user" potential problem
-+ issue #6368  Hide/disable edit links for read-only variables
-+ issue #6365  Human readable/writable URLs (html5 api)
-+ rfe          Support virtual columns in MySQL 5.7.5+
-+ issue #6215  Support for virtual/persistent columns in MariaDB
-- issue #11314 Undefined <feature>work upon upgrade to new version
-- issue #1817  Creating configuration storage tables fail in MySQL 5.7
-- issue #6118  Parser does not handle nested selects
-- issue #5437  Support SELECT ... FROM DUAL
-- issue #4962  Support UNION
-- issue #11322 Missing null checkbox when grid editing a null cell
-+              Upgrade TCPDF to version 6.2.9
-+ issue #6102  Add SHA256 security password support
-- issue #10250 Displayed git revision info is not set
-+              Improved schema SVG export
-- issue #10726 Do not try to set port 80 for https requests
-+ issue #11394 Export/import Designer view
-+              Partition support in table Structure
-+ issue #11414 Unclear export options / organization / hierarchy
-               Set minimum required PHP version to 5.5 (older versions are EOL)
-- issue #11407 ALTER TABLE failing on import when table exists
-- issue        Do not export `sys` database when exporting server
-- issue #11436 CREATE DATABASE should be enabled by default on server exports
-- issue #11442 MySQL 5.7 and SHOW VARIABLES
-- issue #11445 MySQL 5.7 and Status page for an unprivileged user
-- issue #11448 Clarify doc about the MemoryLimit directive
-- issue #11489 Cannot copy a database under certain conditions
-
-4.4.15.0 (not yet released)
-- issue #11411 Undefined "replace" function on numeric scalar
-- issue #11421 Stored-proc / routine - broken parameter parsing
-- issue        Missing name for configuration read_as_multibytes
-- issue #11431 Incorrect "No row selected" message
-- issue #11447 MySQL 5.5 and the language system variable
-- issue #11452 Semantics of export and import icons are mixed up
-- issue #11451 Designer-Bug in move.js on multiple server configuration
-- issue #11458 Invalid UTF-8 sequence in argument
-- issue #11457 Request URI too large
-- issue        Invalid argument supplied for foreach()
-
-4.4.14.1 (2015-09-08)
-- issue        [security] reCaptcha bypass
-
-4.4.14.0 (2015-08-20)
-- issue #11367 Export after search, missing WHERE clause
-- issue #11380 Incomplete message after import
-- issue        Incorrect scalar type declaration (reported under PHP 7)
-- issue #11389 ReCaptcha produces deprecated messages under PHP 7
-- issue #11387 phpseclib < 2.0 produces deprecated messages on PHP 7
-- issue #11404 "Switch to copied table" doesn't work
-- issue #11406 Missing quotes after calling "distinct values"
-- issue #11386 Cannot import database with long data in one column
-- issue #11410 SPATIAL index option is not clickable
-
-4.4.13.1 (2015-08-08)
-- issue #11368 SQL error when importing phpMyAdmin dump file
-
-4.4.13.0 (2015-08-07)
-- issue #1808  "Improve table structure" generates invalid SQL
-- issue        Once checked "Show only active" checkbox is always checked
-- issue #1813  Delete rows using "Check All" is broken
-- issue        Fix PHP 7 possible binding ambiguity
-- issue #11326 Exported schema includes all the tables of the database
-- issue #11339 Results not displayed if query ends in delimiter and comment
-- issue #11320 Live edit of data fields is not working always
-- issue        Table list in navigation collapses when entering into a table in another page
-- issue #11364 JS error while trying to auto navigate to db structure page when db creation has failed
-
-4.4.12.0 (2015-07-20)
-- bug       Saved chart image does not have a proper name or an extension
-- bug #4976 Timepicker CSS issues in Original theme
-- bug #4975 Move/Copy/Rename operations on Table/Db fail on Drizzle server
-- bug #4826 Two inline edit windows
-- bug #4979 Problem when import *.ods file
-- bug       Add missing head tag
-- bug #4985 Column headers move when scrolling
-
-4.4.11.0 (2015-07-06)
-- bug       Missing selected/entered values when editing active options in visual query builder
-- bug #4969 Autoload from prefs_storage not behaving properly
-- bug #4972 Incorrect length computed for binary data
-- bug       Remove character set from create_tables_drizzle.sql
-- bug #4973 Users overview needs clarification
-- bug #4974 Creating a database from console doesn't update navigation panel
-- bug #4844 FAQ 1.17 needs an update
-
-4.4.10.0 (2015-06-17)
-- bug #4950 Issues in database selection for replication
-- bug #4951 Trying to save chart as image crashes the browser
-- bug #4953 cant drag sql.gz file onto import input
-- bug #4960 Table creation results in GET request with missing server parameter that invalidates the session
-- bug #4961 Javascript error when Designer is opened
-- bug #4962 Insert by foreign key scrolls page to top
-- bug #4955 Clicking on the navi logo does not always work
-- bug       External URL for $cfg['NavigationLogoLink'] causes JavaScript error when clicked
-
-4.4.9.0 (2015-06-04)
-- bug #4920 relation view doesn't list fields of table in other database
-- bug #4905 Sorting by an alias
-- bug #4931 False error before entering reCAPTCHA
-- bug #4909 central column with multiple server
-- bug #4937 Custom export with backquotes off is not working
-- bug #4908 Reverse proxy: infinite internal redirect (added warning in doc)
-- bug #4942 Export to gzip saves plain text under Chrome
-
-4.4.8.0 (2015-05-28)
-- bug       Allow accessing visual query builder when pmadb is not configured
-- bug #4893 Nav tree line alignment issue
-- bug #4911 Lock page icon is not shown after fresh reload
-- bug #4912 "Highlight pointer" and "Row marker" doesn't work properly
-- bug       Browse foreigners window goes out of the window
-- bug #4918 Date field popup dialog position bug
-- bug       In /setup, PMA_messages is not defined
-- bug #4924 Recaptcha failure
-- bug #4930 Database copy doesn't work for tables with more than one FULLTEXT index
-- bug #4929 Edit view structure doesn't load the algorithm
-- bug #4923 Do not limit table comments to 60 characters
-
-4.4.7.0 (2015-05-16)
-- bug #4876 Settings issues (Favorite tables shown twice in Settings)
-- bug #4896 Non-styled error page when following results link
-- bug #4894 Deleting without confirmation
-- bug #4858 Issues with SQL autocomplete
-- bug #4897 Column hint in SQL autocomplete is sometimes not shown
-- bug #4898 JS error after selecting a field and press Enter
-- bug       Honor proxy settings when getting Git commit information
-- bug       Missing title on link
-- bug #4512 ForceSSL Redirect Check
-- bug       Undefined index collation_connection
-- bug       Error when the reporting server is down
-- bug       Escape database and table names for partition maintenance
-- bug       Invalid value for CURLOPT_SSL_VERIFYPEER
-- bug #4367 Import status infinite loop
-- bug #4902 Designer: Loading does not work
-- bug #4904 Setup: Overview > Display does not work
-- bug #4906 Designer: pages from all databases
-
-4.4.6.1 (2015-05-13)
+4.0.10.10 (2015-05-13)
 - bug #4899 [security] CSRF vulnerability in setup
-- bug #4900 [security] Vulnerability allowing man-in-the-middle attack
+- bug #4900 [security] Vulnerability allowing Man-in-the-middle attack
 
-4.4.6.0 (2015-05-07)
-- bug #4890 webkitStorageInfo and webkitIndexedDB is deprecated
-- bug #4892 Undefined variable: unique_conditions
-- bug #4891 CSV Import ignores "Replace table data with file" checkbox
-
-4.4.5.0 (2015-05-05)
-- bug       Table overhead stats: missing space before the unit
-- bug       Fix resize icon in Designer
-- bug #4879 Exit fullscreen in Designer does not change the button text
-- bug #4880 Designer icons missing when using original theme
-- bug #4878 Column list of central columns is not cleared
-- bug #4881 jQuery dialogs of the Designer are not displayed in fullscreen
-- bug #4883 Search function breaks when searching for certain combinations of backslashes and slashes
-- bug #4830 Maximum execution time exceeded in Util.class.php (better fix)
-- bug #4885 Some icons are above the overlay of jQuery dialogs
-- bug #4886 Clicking on external links in advisor rules give JS error
-- bug #4888 Filter in central columns does not work in other languages
-
-4.4.4.0 (2015-04-26)
-- bug #4863 Edit vs Change
-- bug #4859 Don't scroll (to bottom) when editing multiple rows
-- bug #4862 Misaligned Inline edit field
-- bug #4861 Use of undefined constant PMA_DRIZZLE
-- bug #4865 sprintf(): Too few arguments
-- bug #4866 Limit column ordering in index edit dialog
-- bug #4867 Incorrect ALTER TABLE statement generated
-- bug #4870 Inconsistency in 'Ignore' checkbox in insert page
-- bug #4869 Drop column action not asking to confirm
-- bug #4871 Error on creating table
-- bug       Undefined index: Rows
-
-4.4.3.0 (2015-04-20)
-- bug #4851 PHP errors in login dialogue
-- bug #4207 json_encode error due to strftime returning non utf8 chars in Windows 8.1 Chinese version
-- bug #4845 White screen (Cloudflare)
-- bug #4794 Server error viewing table content
-- bug       Fix issues related to number of decimal places in time
-- bug #4853 Relation view between 1600 and 1780 px
-- bug       PHP 7 compatibility in php-gettext
-- bug       PHP 7 compatibility in bfShapeFiles
-- bug       PHP 7 session_regenerate_id() warning
-- bug #4857 Alter table after changing column name error
-- bug #4830 Maximum execution time exceeded in Util.class.php
-
-4.4.2.0 (2015-04-13)
-- bug #4835 PMA_hideShowConnection not called after submit_num_fields
-- bug #4836 Server warning after moving from console to direct clicks
-- bug #4837 Duplicate new version notification when using the "Back" button
-- bug #4839 DOC link in setting is broken
-- bug #4841 Status page: Mislukte pogingen per uur value is incorrect
-- bug       MIME Transformation link fixed
-- bug #4838 Prevents console window from moving out of the screen height
-- bug #4829 Create procedure via SQL Editor not more possible
-- bug #4833 CSS and Javascript are not compressed
-- bug #4849 Functions accessed from navigation do not load on ajax dialog
-- bug #4850 Relation view on 1920
-
-4.4.1.1 (2015-04-08)
-- bug #4846 Web server's error log is flooded
-
-4.4.1.0 (2015-04-07)
-- bug #4813 MySQL 5.7.6 and the Users menu tab
-- bug #4818 MySQL 5.7.6 and changing the password for another user
-- bug #4819 Request URI too large
-- bug #4814 MySQL 5.7.6 and Databases
-- bug       Use 'server' parameter in console to work in multi server environments
-- bug       Missing tooltip in monitor
-- bug       Missing sort icons in monitor
-- bug #4805 Inline edit broken when using functions in query
-- bug #4821 Timed-out import fails to restart when file represented
-- bug #4754 pMA DB not detected properly
-- bug #4825 Datepicker missing when changing number of rows on Insert page
-- bug #4824 INNODB STATUS page is empty
-- bug #4828 JavaScript is loaded in wrong order
-- bug #4827 TEXT formatting doesn't work after inline editing
-- bug #4822 Compress when php.ini output_buffering is active
-- bug #4832 Sorting distinct values result loses links
-- bug #4834 Do not attach token to css requests to improve caching
-
-4.4.0.0 (2015-04-01)
-+ rfe #1553 InnoDB presently supports one FULLTEXT index creation at a time
-+ rfe #1562 Allow tracking multiple table at once from database level tracking page
-+ rfe #1564 Improve action message on Tracking page
-+ rfe #1566 Change value of "Number of rows:" when "Show all" is checked
-+ rfe       Focus console by clicking on white space
-+ rfe #1507 Part 1: Cycle through console history with keyboard up/down arrows
-+ rfe #1579 Default to primary key when adding relation
-+ rfe #1572 User prefs: Diff-friendly JSON for config
-+ rfe #1567 Sever Variables Table UI Improvements
-- bug #4675 phpMyAdmin should be able to work without 'examples' DIR - move SQL scripts to sql directory
-+ rfe #1578 Warn about reserved word only when a column is created
-+ rfe #1590 Recaptcha API v2
-+ rfe #1580 Individual Zeroconf PMA tables support
-+ rfe #1525 Generate keys one per line
-+ rfe #347  allow table with transformed column anywhere in FROM clause
-+ rfe #1591 Shortcut link to search page
-+ rfe #1568 Fold Add Column After / Before into dropdown
-- bug #4705 Table structure: adding primary key doesn't refresh page
-+ rfe #1582 SQL formatter
-+ rfe #1597 Fast filter improvement: remove "x other results found"
-- bug #4720 No error message on Missing extension mbstring
-+ rfe #801  Builtin transformations and relations
-+ rfe #767  USING BTREE support for HEAP/MEMORY tables
-+ rfe #1596 Make "Options > Relational" configurable
-+ rfe #719  More details in PDF relation view
-+ rfe #1096 Cannot enter connection for federated engine table
-+ rfe #954  Allow SALT in ENCRYPT function
-+ rfe #1260 Setting LoginCookieValidity > session.gc_maxlifetime
-+ rfe       Transformation for JSON
-- bug       Fix isCanvasSupported for new window
-+ rfe #1600 Clarify the "Inline" link
-+ rfe #1179 Speed up slow triggers by using EVENT_OBJECT_SCHEMA
-+ rfe #1192 ON DUPLICATE KEY UPDATE for loading CSV
-- bug       Cannot execute command from console (multi-server installation)
-+ rfe #1208 linking from information_schema
-+ rfe #1235 Relation view: move to main "Structure" page
-+ rfe #1558 Designer menu with explicit text
-+ rfe #937  Relations with views like with tables
-+ rfe #1241 Browse Field -> Search
-+ rfe #723  Provide sanity check for table/column names (table names)
-+ rfe #1312 SessionTimeZone configuration directive
-- bug       Add missing confirmation when deleting tracking report entries
-+ rfe       Ability to disable foreign key check when emptying tables
-+ rfe #1549 Reset auto-increment when exporting structure
-+ rfe #1602 Recover query in redaction after session end
-+ rfe #1605 After database creation, go to database structure page
-+ rfe #1604 Show PHP version
-- bug #4770 Multiple delete on table browse ignoring foreign key checkbox
-+ rfe       CodeMirror based SQL editor as an input transformation
-+ rfe #1275 CodeMirror based JSON editor as an input transformation
-+ rfe #685  Editor for HTML content
-+ rfe #1595 make professional code editor suggestion
-+ rfe #1606 processlist filter
-+ rfe       Change tracking activation status from db level tracking page
-+ rfe #1207 Export users associated with a specific schema/database
-+ rfe #1575 "Disable database expansion" : unclear directive name and
-explanation
-+ rfe #1607 Tool tip for lock icon when making changes to a page
-+ rfe #1327 Hide 'Add user' link if user does not have privileges
-+ rfe #501  Support for SSL GRANT option
-+ rfe #1608 Central columns allowing setting SIGNED / UNSIGNED attribute for integer
-+ rfe #1441 Add regexp match when using AllowArbitraryServer
-- bug #4806 Unable to work with two different servers in two tabs
-
-4.3.14.0 (not yet released)
-
-
-4.3.13.0 (2015-03-29)
-- bug #4803 "Show hidden items" is sometimes hidden
-- bug #4807 Breaks when sorting by multiple columns while using UNION
-- bug #4798 Missing column when exporting in sql
-- bug #4810 Broken find and replace
-- bug #4804 Undefined Index after export schema
-- bug #4802 Changelog page is not working
-- bug #4815 Infinite calls to index.php
-- bug #4820 Invalid links to dev.mysql.com
-- bug #4718 simulate query fails, but actual query does not
-
-4.3.12.0 (2015-03-14)
-- bug #4746 Right-aligned columns have left-aligned header
-- bug #4779 PMA_Util::parseEnumSetValues fails on enums with UTF-8 values
-- bug       Undefined index savedsearcheswork
-- bug #4788 Inline edit of DATE fields with NULL, NULL checkbox is under datepicker
-- bug #4790 DROP TABLE/VIEW IF EXISTS are not tracked
-- bug       Compatibility with central columns of version 4.4
-- bug #4758 Firefox with auth_type to http with multiple server doesn't work anymore
-- bug #4789 Views aren't dropped when copying a database
-- bug #4784 Incomplete bookmark saving
-- bug #4786 SELECT width on relations page
-
-4.3.11.1 (2015-03-04)
+4.0.10.9 (2015-03-04)
 - bug       [security] Risk of BREACH attack, see PMASA-2015-1
 
-4.3.11.0 (2015-03-02)
-- bug #4774 SQL links are completely wrong
-- bug #4768 MariaDB: version mismatch
-- bug #4777 Some images are missing in Designer for original theme
-- bug #4767 Drizzle: undefined index in mysql_charsets.inc.php
-- bug #4753 Normal field and multi-line field have different margins
-- bug #4760 Cannot re-import settings from local storage
-- bug #4778 SQL error when database list is sorted by additional columns
-- bug #4780 Notice when timestamp column does not have default value
+4.0.10.8 (2015-01-07)
+- rfe #1588 recursive function too deep - operator change suggestion 
+- rfe #1589 support early versions of PHP5.2 (register_shutdown_function)
 
-4.3.10.0 (2015-02-20)
-- bug       Undefined index navwork
-- bug #4744 Opening console scroll down the page
-- bug       Remove extra column heading in view structure page
-- bug       Add missing confirmation when deleting central columns
-- bug       Undefined index DisableIS
-- bug #4763 Database export with more than 512 tables fails
-- bug #4769 Previously set column aliases are destroyed if returned to the same table
-- bug #4752 Incorrect page after creating table
-- bug #4771 Central Columns not working, showing error
+4.0.10.7 (2014-12-03)
+- bug #4611 [security] DOS attack with long passwords
 
-4.3.9.0 (2015-02-05)
-- bug #4728 Incorrect headings in routine editor
-- bug #4730 Notice while browsing tables when phpmyadmin pma database exists, but not all the tables
-- bug #4729 Display original field when using "Relational display column" option and display column is empty
-- bug #4734 Default values for binary fields do not support binary values
-- bug #4736 Changing display options breaks query highlighting
-- bug       Undefined index submit_type
-- bug #4738 Header lose align when scrolling in Firefox
-- bug #4741 in ./libraries/Advisor.class.php#184 vsprintf(): Too few arguments
-- bug #4743 Unable to move cursor with keyboard in filter rows box
-- bug       Incorrect link in doc
-- bug #4745 Tracking does not handle views properly
-- bug #4706 Schema export doesn't handle dots in db/table name
-- bug #3935 Table Header not displayed correct (Safari 5.0.5 Mac)
-- bug #4750 Disable renaming referenced columns
-- bug #4748 Column name center-aligned instead of left-aligned in Relations
+4.0.10.6 (2014-11-20)
+- bug #4578 [security] XSS vulnerability in table print view
+- bug #4579 [security] XSS vulnerability in zoom search page
+- bug #4594 [security] Path traversal in file inclusion of GIS factory
+- bug #4598 [security] XSS in multi submit
+- bug #4597 [security] XSS through pma_fontsize cookie
 
-4.3.8.0 (2015-01-24)
-- bug       Undefined constant PMA_DRIZZLE
-- bug #4712 Wrongly positioned date-picker while Grid-Editing
-- bug #4714 Forced ORDER BY for own sql statements
-- bug #4721 Undefined property: stdClass::$version
-- bug #4719 'only_db' not working
-- bug #4700 Error text: Internal Server Error
-- bug #4722 Incorrect width table summary when favorite tables is disabled
-- bug #4716 Collapse all in navigation panel is sometimes broken
-- bug #4724 Cannot navigate in filtered table list
-- bug #4717 Database navigation menu broken when resolution/screen is changing
-- bug #4727 Collation column missing in database list when DisableIS is true
-- bug       Undefined index central_columnswork
-- bug       Undefined index favorite_tables
+4.0.10.5 (2014-10-21)
+- bug #4562 [security] XSS in debug SQL output
+- bug #4563 [security] XSS in monitor query analyzer
 
-4.3.7.0 (2015-01-15)
-- bug #4694 js error on marking table as favorite in Safari (in private mode)
-- bug #4695 Changing $cfg['DefaultTabTable'] doesn't update link and title
-- bug       Undefined index menuswork
-- bug       Undefined index navwork
-- bug       Undefined index central_columnswork
-- bug #4697 Server Status refresh not behaving as expected
-- bug       Null argument in array_multisort()
-- bug #4699 Navigation panel should not hide icons based on 'TableNavigationLinksMode'
-- bug #4703 Unsaved schema page exported as pdf.pdf
-- bug #4707 Call to undefined method PMA_Schema_PDF::dieSchema()
-- bug #4702 URL is non RFC-2396 compatible in get_scripts.js.php
+4.0.10.4 (2014-10-01)
+- bug #4544 [security] XSS vulnerabilities in table search and table structure pages
 
-4.3.6.0 (2015-01-07)
-- bug       Undefined index notices while configuring recent and favorite tables
-- bug #4687 Designer breaks without configuration storage
-- bug #4686 Select elements flicker and selects something else
-- bug #4689 Setup tool creates "pma__favorites" incorrectly
-- bug #4685 Call to a member function isUserType() on a non-object
-- bug #4691 Do not include console when no server is selected
-- bug #4688 File permissions in archive
-- bug #4692 Dynamic javascripts gives 500 when db selected
+4.0.10.3 (2014-09-13)
+- bug #4530 [security] DOM based XSS that results to a CSRF that creates a
+            ROOT account in certain conditions
 
-4.3.5.0 (2015-01-05)
-- bug       Auto-configuration: tables were not created automatically
-- bug #4677 Advanced feature checker does not check for favorite tables feature
-- bug #4678 Some of the data stored in configuration storage are not deleted upon db or table delete
-- bug #4679 Setup does not allow providing a name for favorites table
-- bug #4680 Number of favorite table are not configurable in setup
-- bug #4681 'Central columns table' field in setup does not have a description
-- bug #4318 Default connection collation and sorting
-- bug #4683 Relational data is not properly updated on table rename
-- bug #4655 Undefined index: collation_connection (second patch)
-- bug #4682 4.3.3 & 4.3.4 Import sql created by mysqldump fails on foreign keys
-- bug #4676 Auto-configuration issues
-- bug #4416 New lines are removed when grid editing (part two: TEXT)
+4.0.10.2 (2014-08-17)
+- bug #4501 [security] XSS in table browse page
+- bug #4502 [security] Self-XSS in enum value editor
+- bug #4503 [security] Self-XSSes in monitor
+- bug #4504 [security] Self-XSS in query charts
+- bug #4517 [security] XSS in relation view
+
+4.0.10.1 (2014-07-17)
+- bug #4488 [security] XSS injection due to unescaped table name (triggers)
+- bug #4492 [security] XSS in AJAX confirmation messages 
+
+4.0.10.0 (2013-12-04)
+- bug #4150 Clicking database name in query window opens a new tab
+- bug #4141 Wrong page is shown after editing; also, do not show a modal
+            dialog for multi-row edit
+- bug #3939 PHP NavigationTree error when paging through list
+- bug #4075 Support A10 Networks load balancer
+- bug #4083 row deleting isn't binlogs friendly
+- bug #4163 Setup script does not recognize manually-configured server
+- bug #4158 Events page says no privileges with ALL PRIVILEGES
+
+4.0.9.0 (2013-11-04)
+- bug #4104 Can't edit updatable view when searching
+- bug #4108 Missing refresh by deleting databases
+- bug #3995 Drizzle server charset notice
+- bug #3911 Filtering database names includes empty groupings
+- bug #3678 Does not display or manipulate bit(64) fields appropriately
+- bug #4129 Unneeded navi panel refresh
+- bug #4120 SSL redirects to port 80
+- bug #4144 DROP DATABASE displays wrong database name
+- bug #4059 Running delete query asks for confirmation but says it was already executed
+- bug #4147 Accessibility: Images without Alt nor title attribute 
+
+4.0.8.0 (2013-10-06)
+- bug #3988 Rename view is not working
+- bug #4041 Interaction between linkified fields and grid editing
+- bug #3975 Table grouping isn't implemented properly
+- bug #4060 Browser tries to remember wrong password when creating new user
+- bug #4002 Edit Index on big table doesn't show "Loading" or any message
+- bug #4098 Default table tab is ignored
+- bug #4099 Server/library difference warning: setting is ignored
+- bug #4100 table tree group strategy
+- bug #4102 ALTER TABLE ORDER BY and InnoDB
+- bug #4103 Tracking report: cannot delete a statement
+- bug #3996 Drizzle navigation doesn't expand
+- bug #4074 GIS column editor: point not displayed
+- bug #4109 Drizzle tables in navigation are shown as views
+- bug #4095 NUL symbols added to the end of database dump file
+- bug #4105 More disappears in table Structure
+- bug #3992 Multi-row edit doesn't clear values when checking NULL
+
+4.0.7.0 (2013-09-23)
+- bug #3993 Sorting in database overview with statistics doesn't work
+- bug Handle the situation where PHP_SELF is not set
+- bug #4080 Overwrite existing file not obeyed
+- bug #3929 Database-specific privileges are not copied when cloning user
+- bug #3997 Error handling in case MySQL extension is missing
+- bug #4089 Moving Columns will alter column definition
+- bug #4091 Insert ignore option does not work
+- bug #4090 Downloading BLOB downloads page template
+- bug #4092 Clicking on table name in view of information_schema redirects to wrong page
+- bug #4079 Copy Table Add AUTO_INCREMENT value checkbox not working
+- bug #4088 MySQL server version at index.php incorrect w/ controlhost
+- bug #4001 Import error: Class 'ImportOds' not found
+- bug #3986 Missing DROP VIEW button
+
+4.0.6.0 (2013-09-05)
+- bug #4036 Call to undefined function mb_detect_encoding (clarify the doc)
+- bug Missing hints when changing a column's structure
+- bug #4048 Cannot select foreign value in Search
+- bug #4025 gzip export is not actually compressed with mod_deflate
+- bug #4054 query analysis doesn't launch in status monitor
++ Add pmahomme icon credits (FamFamFam silk icon set)
+- bug #4064 Table structure statistics "Space usage" caption too small for l10n
+- bug #4051 Wrong tabindex when inserting rows
+- bug #4066 varchar field not truncated in table browse mode
++ rfe #1435 Opening database should expand it in the navigation menu
+- (performance) Removed ShowTooltip directive
+- bug #4046 Exporting huge Tables causes memory-Problems
+
+4.0.5.0 (2013-08-04)
+- bug #3977 Not detected configuration storage
+- bug #3970 Pressing enter in the filter field reloads page
+- bug #3984 Cannot insert in this table (PHP < 5.4)
+- bug #3989 Reloading privileges does not update the interface
+- bug #3960 NavigationBarIconic config not honored
+- bug #3985 Call to undefined function mb_detect_encoding
+- bug #4007 Analyze option not shown for InnoDB tables
+- bug #4015 Forcing a storage engine for configuration storage
+- bug Incorrect Drizzle 7 detection
+- bug #4019 Create database if not exists (export): add an option to the
+  interface to enable generating CREATE DATABASE and USE (false by default)
+- bug #4012 Crash on CSV file import
+- bug #4009 Statistic Monitor shows only last 3 digits in graph
+- bug #3998 Non-permanent SQL history not working
+- bug #3578 Transformations for text/plain on a BLOB column
+- [security] Improved protection against cross framing, see PMASA-2013-10
++ Reinstated configuration directive: AllowThirdPartyFraming
+
+4.0.4.2 (2013-07-28)
+- [security] fix unescaped parameter, see PMASA-2013-8
+- [security] Fix stored XSS in Server status monitor, see PMASA-2013-9
+- [security] Fix stored XSS in navigation panel logo link, see PMASA-2013-9
+- [security] Fix self-XSS in setup, trusted proxies validation, see PMASA-2013-9
+- [security] Fix full path disclosure, see PMASA-2013-12
+- [security] Fix control user SQL injection in pmd_pdf.php, see PMASA-2013-15
+- [security] Fix control user SQL injection in schema_export.php, see PMASA-2013-15
+- [security] Fix self-XSS in schema export, see PMASA-2013-14
+- [security] Fix unencoded json object, see PMASA-2013-11
+- [security] Fix stored XSS in link transformation plugin, see PMASA-2013-13
+
+4.0.4.1 (2013-06-30)
+- [security] Global variables scope injection vulnerability (see PMASA-2013-7)
+
+4.0.4.0 (2013-06-17)
+- bug #3959 Using DefaultTabDatabase in NavigationTree for Database Click
+- bug #3961 Avoid Suhosin warning when in simulation mode
+- bug #3897 Row Statistics and Space usage bugs
+- bug #3966 Only display "table has no unique column" message when applicable
+- bug #3965 Default language wrong with zh-TW
+- bug #3921 Call to undefined function PMA_isSuperuser() if default server is
+not set 
+- bug #3971 Ctrl/shift + click opens links in same window
+- bug #3964 Import using https does not work
+- bug Missing removeCRLF option in ExportCsv and ExportExcel plugins
+- bug #3631 Drop not working Visio schema export.
+- bug #3645 Better handling of invalid ODS documents
+- bug #3976 Number of pages
+- bug #3922 User privileges, database name unescaped
+
+4.0.3.0 (2013-06-05)
+- bug #3941 Recent tables list always empty
+- bug #3933 Do not translate "Open Document" in export settings
+- bug #3927 List of tables is missing after expanding in the navigation frame
+- bug #3942 Warnings about reserved word for many non reserved words
+- bug #3912 Exporting row selection, resulted by ORDER BY query
+- bug #3957 Cookies must be enabled past this point
+- bug #3956 "Browse foreign values" search filter / page selector not working
+- bug #3579 NOW() function incorrectly selected (partial regression)
+- [security] Javascript execution vulnerability in Create view,
+  reported by Maxim Rupp (see PMASA-2013-6)
+
+4.0.2.0 (2013-05-24)
+- bug #3902 Cannot browse when table name contains keyword "call"
++ center loading indicator for navigation refresh, related to bug #3920
+- bug #3925 Table sorting in navigation panel is case-sensitive
+- bug #3915 Import of CSV file (Replace table data with file) with duplicate values
+- bug #3907 undefined variables, function parameter problems
+- bug #3898 Structure not refreshed after column drop 
+- bug #3926 View is not updatable
+- bug #3919 PropertiesIconic not honored
+- bug #3930 Databases to choose for specific privileges show up escaped
+- bug #3910 Export database with empty table as a php array, does not produce valid PHP
+- bug #3936 Query profiler chart not loading from SQL Query page
+- bug #3946 Missing CSV import option "Do not abort on INSERT error"
+- bug #3943 Missing Operations>Table options>AUTO_INCREMENT
+- bug Missing CREATE DATABASE statement when exporting at database level
+- bug #3924 Show warning when CSV file does not contain data for all columns
+- bug #3947 Missing Sql Query after modify structure
+- bug #3948 Server export problems
+- bug #3917 CountTables directive is deprecated
+
+4.0.1.0 (2013-05-14)
+- bug #3879 Import broken for CSV using LOAD DATA
+- bug #3889 When login fails and error display is active, login data is displayed
+- bug #3890 [import] Web server upload directory import fails
+- bug #3891 [import] Server upload folder import file name missing in success message 
++ rfe #1421 [auth] Add retry button on connection failure with config auth
+- bug #3894 [interface] Provide feedback if no columns selected for multi-submit
+- bug #3799 [interface] Incorrect select field change on ctrl key navigation in Firefox
+- bug #3885 [browse] display_binary_as_hex option causes unexpected behavior
+- bug #3899 Git commit links to Github missing
+- bug #3900 CSP WARN in Firefox console
+- bug #3901 Setup script warning for config auth (stored login data) shows link BBcode
+- bug #3895 [browse] Fixed getting BLOB data
+- bug #3905 [export] Custom Exporting exports all databases
+- bug #3909 [import] Import of CSV FIle to selected table doesn't work
+- bug #3904 Browsing an empty table should not display its Structure
+- bug #3908 Calendar widget improperly redirects to home 
+- bug #3918 Greyed out tabs when there are no rows fixed 
+- bug #3916 [interface] Missing scrollbar (original theme)
++ [vendor] add tcpdf path to vendor_config.php
+- bug fix compat with tcpdf >= 6.0 (tested with 6.0.012)
+
+4.0.0.0 (2013-05-03)
++ Patch #3481047 for rfe #3480477 Insert as new row enhancement
++ Patch #3480999 Activate codemirror in the query window
+- Patch #3495284 XML Import - fix message and redirect
++ rfe #3484063 Null checkbox behavior
++ Patch #3497179 Contest-5: Add user: Allow create DB w/same name + grant u_%
++ Patch #3498201 Contest-6: Export all privileges
++ Patch #3502814 for rfe #3187077 Change password buttons should match
++ rfe #3488640 Expand table-group in non-light navigation frame if only one
++ Patch #3509360 Contest-3: Option "Truncate table" before "insert"
++ Patch #3506552 Contest-2: Show index information in the data dictionary
++ Patch #3510656 Contest-1: Ignoring foreign keys while dropping tables
+- Bug #3509686 Reverting sort on joined column does not work
++ New transformation: append string
++ rfe #3507804 Session upload progress (PHP 5.4)
++ rfe #3488185 draggable columns vs copy column name
++ Patch #3507001 Contest-4: Textarea for large character columns
++ Removed the PHP version of the ENUM editor
++ Patch #3507111 Display distinct results, linked to corresponding data rows
+- bug #3507917 [export] JSON has unescaped values for allegedly numeric columns
++ rfe #3516187 show tables creation, last update, last check timestamps in db_structure
+- bug #3059806 Supporting running from CIFS/Samba shares
+- bug #3516341 [export] Open Document Text, Word and Texy! Text show table structure twice
+- bug [export] Texy! Text: Columns containing Pipe Character don't export properly
++ [export] Show triggers in Open Document Text, Word and Texy! Text
+- Patch #3415061 [auth] Login screen appears under the page
++ rfe #3517354 [interface] Allow disabling CodeMirror with $cfg['CodemirrorEnable'] = false
++ rfe #3475567 [interface] New directive $cfg['HideStructureActions']
+- bug #3468272 [import] Fixed import of ODS with more paragraphs in a cell
+- bug #3510196 [core] Improved redirecting with ForceSSL option
++ rfe #3518852 [edit] edit blob but not other binary, new option $cfg['ProtectBinary'] = 'noblob'
++ Hide language select box if there are no locales installed
++ Removed some directives: verbose_check, SuggestDBName, LightTabs,
+VerboseMultiSubmit, ReplaceHelpImg
+- Patch #3500882 Fixing checkbox behaviour while editing identical rows
++ rfe #3441722 [interface] Display description of datatypes
++ rfe #3517835 [structure] Move columns easily
++ Ajaxified "Create View" functionality
++ [import] New plugin: import mediawiki
++ New navigation system
++ Discontinued the use of a frame-based layout
++ rfe #3528994 [interface] Allow wrapping possibly long values in replication-status table
++ [interface] Autoselect username input on cookie login page
+- bug #3563799 [interface] Grid editing destroying huge amount of data
++ [import] Remove support for the unactive docSQL import format
+- bug #3577443 [edit] "Browse foreign values" does not show on ajax edit
++ rfe #3522109 [browse] Grid editing: action to trigger it (or disable)
+- bug #3526598 [interface] SQL query not shown when creating table
++ Dropped configuration directive: AllowThirdPartyFraming
++ Dropped configuration directive: LeftFrameLight
++ Dropped configuration directive: DisplayDatabasesList
++ Dropped configuration directives: ShowTooltipAliasDB and ShowTooltipAliasTB
++ Dropped configuration directive: NaviDatabaseNameColor
++ Added configuration directive: MaxNavigationItems
++ Renamed configuration directive: LeftFrameDBTree => NavigationTreeEnableGrouping
++ Renamed configuration directive: LeftFrameDBSeparator => NavigationTreeDbSeparator
++ Renamed configuration directive: LeftFrameTableSeparator => NavigationTreeTableSeparator
++ Renamed configuration directive: LeftFrameTableLevel => NavigationTreeTableLevel
++ Renamed configuration directive: LeftPointerEnable => NavigationTreePointerEnable
++ Renamed configuration directive: LeftDefaultTabTable => NavigationTreeDefaultTabTable
++ Renamed configuration directive: LeftDisplayTableFilterMinimum => NavigationTreeDisplayTableFilterMinimum
++ Renamed configuration directive: LeftDisplayLogo => NavigationDisplayLogo
++ Renamed configuration directive: LeftLogoLink => NavigationLogoLink
++ Renamed configuration directive: LeftLogoLinkWindow => NavigationLogoLinkWindow
++ Renamed configuration directive: LeftDisplayServers => NavigationDisplayServers
++ Renamed configuration directive: LeftRecentTable => NumRecentTables
++ Renamed configuration directive: LeftDisplayDatabaseFilterMinimum => NavigationTreeDisplayDbFilterMinimum
++ Removed the "Mark row on click" feature; must now click the checkbox to mark
++ Removed the "Synchronize" feature
++ Improved layout of server variables page
++ rfe #1052091 [config] Double-underscores in PMA table names
++ Improved the "More" dropdown on the table structure page
++ [interface] Added "scroll to top" link in menubar
++ [designer] Fullscreen mode for the designer
++ Upgraded jquery to v1.8.3 and jquery-ui to v1.9.2
++ Patch #3597529 [status] Add raw value as title on server status page
++ Support MySQL 5.6 partitioning
++ Removed the AjaxEnable directive
++ rfe #3542567 Accept IPv6 ranges and IPv6 CIDR notations in $cfg['Servers'][$i]['AllowDeny']['rules']
+- Bug #3576788 Grid editing shows the value before silent truncation
+- Upgraded jqPlot to 1.0.4 r1121
+- Upgraded to jquery-ui-timepicker-addon 1.1.1
++ rfe #3599046 [interface] Added comments for indexes
+- Replaced qtip with jQuery UI tooltip
+- Upgraded CodeMirror to 2.37
+- bug #2951 [export] Correctly export decimal fields.
+- bug #3762 [core] Make Advisor work on Windows withou COM extension.
+- bug #3519 [export] Prevent infinite recursion in PDF export.
+- bug #3827 Table specific privileges not displayed for db name containing
+underscore 
+- rfe #1386 Add IF NOT EXISTS clause when copying database
+- No longer package .travis.yml configuration file when creating a release.
+- bug #3830 Can't export custom query because it lowercases table names
+- bug #3829 Enabling query profiling crashes javascript based navigation
++ rfe #879 Reserved word warning
++ Remove the database ordering sub-feature of the only_db directive
+- bug #3840 When exporting to gzip format, the data is compressed 2 times
++ rfe #1319 Permit to create index when creating foreign key
+- bug #3703 Incorrect updating of the list of users
+- bug #3853 Blowfish implementation might be broken (replace with phpseclib)
+- bug #3865 Using like operator on each backslash needs 4 backslash protection
+- bug #3860 Displayed git revision info is not set
+- bug #3871 Check referential integrity broken across databases
+- bug #3874 [export] No preselected option when exporting table
+- bug #3873 Can't copy table to target database if table exists there
+- bug #3683 Incorrect listing of records from to count
+- bug #3876 [import] PHP 5.2 - unexpected T_PAAMAYIM_NEKUDOTAYIM
+- [security] Local file inclusion vulnerability, reported by Janek Vind
+  (see PMASA-2013-4)
+- [security] Global variables overwrite in export.php, reported by Janek Vind
+  (see PMASA-2013-5)
+- bug #3892 [export] SQL Export files are empty
+
+3.5.8.2 (2013-07-28)
+- [security] Fix self-XSS in "Showing rows", see PMASA-2013-8
+- [security] Fix self-XSS in Display chart, see PMASA-2013-9
+- [security] Fix stored XSS in Server status monitor, see PMASA-2013-9
+- [security] Fix stored XSS in navigation panel logo link, see PMASA-2013-9
+- [security] Fix self-XSS in setup, trusted proxies validation, see PMASA-2013-9
++ [security] JSON content type header for version_check.php, see PMASA-2013-9
++ [security] Backport fix for jQuery issue #9521 from jQuery 1.6.3, see PMASA-2013-9
++ [security] Fix full path disclosure, see PMASA-2013-12
++ [security] Fix control user SQL injection in pmd_pdf.php, see PMASA-2013-15
++ [security] Fix control user SQL injection in schema_export.php, see PMASA-2013-15
+- [security] Fix self-XSS in schema export, see PMASA-2013-14
+- [security] Fix unencoded json object, see PMASA-2013-11
+
+3.5.8.1 (2013-04-24)
+- [security] Remote code execution (preg_replace), reported by Janek Vind
+  (see PMASA-2013-2)
+- [security] Locally Saved SQL Dump File Multiple File Extension Remote Code
+  Execution, reported by Janek Vind (see PMASA-2013-3)
+
+3.5.8.0 (2013-04-08)
+- bug #3828 MariaDB reported as MySQL
+- bug #3854 Incorrect header for Safari 6.0
+- bug #3705 Attempt to open trigger for edit gives NULL
+- Use HTML5 DOCTYPE 
+- [security] Self-XSS on GIS visualisation page, reported by Janek Vind
+- bug #3800 Incorrect keyhandler behaviour #2
+
+3.5.7.0 (2013-02-15)
+- bug #3779 [core] Problem with backslash in enum fields
+- bug #3816 Missing server_processlist.php
+- bug #3821 Safari: white page
+- Correct detection of the Chrome browser
+
+3.5.6.0 (2013-01-28)
+- bug #3593604 [status] Erroneous advisor rule
+- bug #3596070 [status] localStorage broken in server status monitor
+- bug #3598736 [routines] Editing a procedure with special characters
+- bug #3600322 [core] Visualize GIS data throws Fatal Error
+- bug #3599362 [core] Double-escaped error message
+- bug #3776 [cookies] Login without auth on second server
 
          --- Older ChangeLogs can be found on our project website ---
                      http://www.phpmyadmin.net/old-stuff/ChangeLogs/

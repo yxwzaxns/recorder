@@ -2,7 +2,7 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Library for extracting information about system memory and cpu.
- * Currently supports all Windows and Linux platforms
+ * Currently supports all Windows and Linux plattforms
  *
  * This code is based on the OS Classes from the phpsysinfo project
  * (http://phpsysinfo.sourceforge.net/)
@@ -41,23 +41,23 @@ function PMA_getSysInfoOs($php_os = PHP_OS)
 /**
  * Gets sysinfo class mathing current OS
  *
- * @return PMA_SysInfo|mixed sysinfo class
+ * @return sysinfo class
  */
 function PMA_getSysInfo()
 {
     $php_os = PMA_getSysInfoOs();
     $supported = array('Linux', 'WINNT', 'SunOS');
 
+    $sysinfo = array();
+
     if (in_array($php_os, $supported)) {
-        $class_name = 'PMA_SysInfo' . $php_os;
-        /** @var PMA_SysInfo $ret */
-        $ret = new $class_name();
+        $ret = eval("return new PMA_SysInfo" . $php_os . "();");
         if ($ret->supported()) {
             return $ret;
         }
     }
 
-    return new PMA_SysInfo();
+    return new PMA_SysInfo;
 }
 
 /**
@@ -161,11 +161,12 @@ class PMA_SysInfoWinnt extends PMA_SysInfo
      * @param string $strClass Class to read
      * @param array  $strValue Values to read
      *
-     * @return array with results
+     * @return arrray with results
      */
     private function _getWMI($strClass, $strValue = array())
     {
         $arrData = array();
+        $value = "";
 
         $objWEBM = $this->_wmi->Get($strClass);
         $arrProp = $objWEBM->Properties_;
@@ -176,10 +177,14 @@ class PMA_SysInfoWinnt extends PMA_SysInfo
             }
             $arrInstance = array();
             foreach ($arrProp as $propItem) {
-                $name = $propItem->Name;
-                if (empty($strValue) || in_array($name, $strValue)) {
-                    $value = $objItem->$name;
-                    $arrInstance[$name] = trim($value);
+                if ( empty($strValue)) {
+                    eval("\$value = \$objItem->" . $propItem->Name . ";");
+                    $arrInstance[$propItem->Name] = trim($value);
+                } else {
+                    if (in_array($propItem->Name, $strValue)) {
+                        eval("\$value = \$objItem->" . $propItem->Name . ";");
+                        $arrInstance[$propItem->Name] = trim($value);
+                    }
                 }
             }
             $arrData[] = $arrInstance;
@@ -236,10 +241,7 @@ class PMA_SysInfoLinux extends PMA_SysInfo
     function loadavg()
     {
         $buf = file_get_contents('/proc/stat');
-        $nums = preg_split(
-            "/\s+/",
-            /*overload*/mb_substr($buf, 0, /*overload*/mb_strpos($buf, "\n"))
-        );
+        $nums = preg_split("/\s+/", substr($buf, 0, strpos($buf, "\n")));
         return Array(
             'busy' => $nums[1] + $nums[2] + $nums[3],
             'idle' => intval($nums[4])
@@ -253,7 +255,7 @@ class PMA_SysInfoLinux extends PMA_SysInfo
      */
     public function supported()
     {
-        return @is_readable('/proc/meminfo') && @is_readable('/proc/stat');
+        return is_readable('/proc/meminfo') && is_readable('/proc/stat');
     }
 
 
@@ -271,24 +273,10 @@ class PMA_SysInfoLinux extends PMA_SysInfo
         );
 
         $mem = array_combine($matches[1], $matches[2]);
-
-        $defaults = array(
-            'MemTotal' => 0,
-            'MemFree' => 0,
-            'Cached' => 0,
-            'Buffers' => 0,
-            'SwapTotal' => 0,
-            'SwapFree' => 0,
-            'SwapCached' => 0,
-        );
-
-        $mem = array_merge($defaults, $mem);
-
-        $mem['MemUsed'] = $mem['MemTotal']
-            - $mem['MemFree'] - $mem['Cached'] - $mem['Buffers'];
-
-        $mem['SwapUsed'] = $mem['SwapTotal']
-            - $mem['SwapFree'] - $mem['SwapCached'];
+        $mem['MemUsed']
+            = $mem['MemTotal'] - $mem['MemFree'] - $mem['Cached'] - $mem['Buffers'];
+        $mem['SwapUsed']
+            = $mem['SwapTotal'] - $mem['SwapFree'] - $mem['SwapCached'];
 
         foreach ($mem as $idx => $value) {
             $mem[$idx] = intval($value);
@@ -315,8 +303,8 @@ class PMA_SysInfoSunos extends PMA_SysInfo
      */
     private function _kstat($key)
     {
-        if ($m = shell_exec('kstat -p d ' . $key)) {
-            list(, $value) = preg_split("/\t/", trim($m), 2);
+        if ($m = shell_exec('kstat -p d '.$key)) {
+            list($key, $value) = preg_split("/\t/", trim($m), 2);
             return $value;
         } else {
             return '';
@@ -342,7 +330,7 @@ class PMA_SysInfoSunos extends PMA_SysInfo
      */
     public function supported()
     {
-        return @is_readable('/proc/meminfo');
+        return is_readable('/proc/meminfo');
     }
 
 
@@ -353,8 +341,13 @@ class PMA_SysInfoSunos extends PMA_SysInfo
      */
     public function memory()
     {
+        preg_match_all(
+            MEMORY_REGEXP,
+            file_get_contents('/proc/meminfo'),
+            $matches
+        );
+
         $pagesize = $this->_kstat('unix:0:seg_cache:slab_size');
-        $mem = array();
         $mem['MemTotal']
             = $this->_kstat('unix:0:system_pages:pagestotal') * $pagesize;
         $mem['MemUsed']
