@@ -3,4 +3,10 @@ web:
  ports:
   - "8080:80"
  volumes:
-  - "/Users/ruby/workspace/www/src:/var/www/html" 
+  - "/Users/ruby/workspace/git/recorder/src:/var/www/html"
+ environment:
+  - MYSQL_PORT_3306_TCP_ADDR=10.1.4.113
+  - MYSQL_USERNAME=root
+  - MYSQL_PASSWORD=1234
+  - MYSQL_BASE_INSTANCE_NAME=sakura
+  - MYSQL_APP_INSTANCE_NAME=recorder

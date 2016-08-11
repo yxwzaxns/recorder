@@ -71,10 +71,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 
-$host = getenv('MYSQL_PORT_3306_TCP_ADDR')?getenv('MYSQL_PORT_3306_TCP_ADDR'):'192.168.0.101';
+$host = getenv('MYSQL_PORT_3306_TCP_ADDR')?getenv('MYSQL_PORT_3306_TCP_ADDR'):'192.168.0.10';
 $user = getenv('MYSQL_USERNAME')?getenv('MYSQL_USERNAME'):'root';
 $password = getenv('MYSQL_PASSWORD')?getenv('MYSQL_PASSWORD'):1234;
-$database = getenv('MYSQL_INSTANCE_NAME')?getenv('MYSQL_INSTANCE_NAME'):'sakura';
+$base_database = getenv('MYSQL_BASE_INSTANCE_NAME')?getenv('MYSQL_BASE_INSTANCE_NAME'):'sakura';
+$app_database = getenv('MYSQL_APP_INSTANCE_NAME')?getenv('MYSQL_APP_INSTANCE_NAME'):'sakura';
 
 $active_group = 'sakura';
 $query_builder = TRUE;
@@ -84,7 +85,7 @@ $db['sakura'] = array(
 	'hostname' => $host,
 	'username' => $user,
 	'password' => $password,
-	'database' => $database,
+	'database' => $base_database,
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -106,7 +107,7 @@ $db['recorder'] = array(
 	'hostname' => $host,
 	'username' => $user,
 	'password' => $password,
-	'database' => 'recorder',
+	'database' => $app_database,
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
