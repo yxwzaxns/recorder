@@ -68,10 +68,24 @@
 			$('#info').hide();
 		}
 		// download excel
+		<?php if(! empty($course)) { ?>
 		$('#dump_excel').click(function(){
-			location.href="/index.php/home/dump_excel";
+			// data = {
+			// 	course_name: "<?php echo $course; ?>"
+			// }
+			// $.ajax({
+			// 	url:'/index.php/home/dump_excel',
+			// 	type:'post',
+			// 	data:data,
+			// 	success:function(e){
+			// 			if(e.status == 1){
+			// 			alert("信息更新完成");
+			// 		}
+			// 	}
+			// })
+			location.href="/home/dump_excel?course_name=<?php echo $this->session->userdata['current_course']; ?>"
 		})
-
+		<?php } ?>
 		//alert info of date
 		function aa(){
 			$(".bad_info").click(function(){
@@ -101,7 +115,7 @@
 					$('.alert').show();
 			})
 		})
-	    });
+	});
 	</script>
 	<!-- pop -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

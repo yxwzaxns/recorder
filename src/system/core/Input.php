@@ -239,6 +239,7 @@ class CI_Input {
 	 */
 	public function get($index = NULL, $xss_clean = NULL)
 	{
+
 		return $this->_fetch_from_array($_GET, $index, $xss_clean);
 	}
 

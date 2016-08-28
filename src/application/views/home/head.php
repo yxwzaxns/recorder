@@ -56,7 +56,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">选择课程<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
           	<?php foreach ($courses as $row){
-				echo '<li class="course" data="'.$row['tid'].'"><a href="/index.php/home/index/'.base64_encode($row['course_name']).'">'.$row['course_name'].'</a></li>';
+				echo '<li class="course" data="'.$row['tid'].'"><a href="/index.php/home/index/'.replace_base64_char(base64_encode($row['course_name'])).'">'.$row['course_name'].'</a></li>';
 			}
 			?>
           </ul>

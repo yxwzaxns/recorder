@@ -126,7 +126,6 @@ if ( ! is_php('5.4'))
 	}
 }
 
-
 /*
  * ------------------------------------------------------
  *  Define a custom error handler so we can log PHP errors
