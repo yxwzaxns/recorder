@@ -46,8 +46,7 @@ class Home extends CI_Controller {
 					foreach ($grade as $key => $value) {
 						$_data[$value['sid']]['grade']=$value;
 					}
-					//var_dump($_data);exit;
-
+                    // var_dump($_data);exit;
 					$this->load->vars('course',$course);
 					$this->load->vars('course_data',$_data);
 				}else{
@@ -60,6 +59,7 @@ class Home extends CI_Controller {
 				foreach ($result as $key => $value) {
 					$coursed_name[]=$value['Field'];
 				}
+        // var_dump($coursed_name);exit;
 				$this->load->vars('coursed_name',$coursed_name);
 
 			}else{
@@ -265,7 +265,8 @@ class Home extends CI_Controller {
 			$objPHPExcel->getActiveSheet()->getStyle('C1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_JUSTIFY);//水平方向上两端对齐
 			$objPHPExcel->getActiveSheet()->getStyle( 'C1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 
-
+      // $i 行号
+      // $tmp_index 列位置
       $i = 1;
       foreach ($table_data as $key => $value) {
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.($i+2), $i);
@@ -294,6 +295,11 @@ class Home extends CI_Controller {
           }
           $tmp_index +=3;
         }
+        // insert score of all
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($char[$tmp_index].($i+2), $value['grade']['experimentscore']);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($char[$tmp_index+1].($i+2), $value['grade']['averagescore']);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($char[$tmp_index+2].($i+2), $value['grade']['totalscore']);
+
 
         $i ++;
       }

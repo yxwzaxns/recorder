@@ -49,15 +49,15 @@
         return false;
     } );
 		//callback
-		$('#example').on( 'order.dt', function () {
-			aa();
-		} );
-		$('#example').on( 'length.dt', function () {
-			aa();
-		} );
-		$('#example').on( 'page.dt', function () {
-			aa();
-		} );
+		// $('#example').on( 'order.dt', function () {
+		// 	aa();
+		// } );
+		// $('#example').on( 'length.dt', function () {
+		// 	aa();
+		// } );
+		// $('#example').on( 'page.dt', function () {
+		// 	aa();
+		// } );
 		//$('#myStat').circliful();
 	  var info=<?php echo empty($course)?0:1; ?>;
 	  if(info=='1'){
@@ -86,21 +86,33 @@
 			location.href="/home/dump_excel?course_name=<?php echo $this->session->userdata['current_course']; ?>"
 		})
 		<?php } ?>
-		//alert info of date
-		function aa(){
-			$(".bad_info").click(function(){
-					sid=$(this).data('sid');
-					name=$('#'+sid).html();
-					courcName=$(this).parent(".cource_item").data("cource-name");
+		//alert info of data
+		$(document).on('click', '.bad_info', function() {
+		sid=$(this).data('sid');
+		name=$('#'+sid).html();
+		courcName=$(this).parent(".cource_item").data("cource-name");
 
-					 $('#myModal #name').val(name);
-					 $('#myModal #sid').val(sid);
-					 $('#myModal #course_name').val(courcName);
+		 $('#myModal #name').val(name);
+		 $('#myModal #sid').val(sid);
+		 $('#myModal #course_name').val(courcName);
 
-					 $('#myModal').modal();
-				})
-		}
-		aa();
+		 $('#myModal').modal();
+
+		});
+		// function aa(){
+		// 	$(".bad_info").click(function(){
+		// 			sid=$(this).data('sid');
+		// 			name=$('#'+sid).html();
+		// 			courcName=$(this).parent(".cource_item").data("cource-name");
+		//
+		// 			 $('#myModal #name').val(name);
+		// 			 $('#myModal #sid').val(sid);
+		// 			 $('#myModal #course_name').val(courcName);
+		//
+		// 			 $('#myModal').modal();
+		// 		})
+		// }
+		// aa();
 		//补签
 		$(".retroactive").click(function(){
 			var retroactiveData = $('.retroactive_form').serialize();
@@ -185,11 +197,18 @@
 		.cource_item .input{
 			margin-left: 30px;
 		}
+		.cource_item .input-score{
+			margin: 0 auto;
+		}
 		.cource_item input{
 			width: 30px;
 			text-align: center;
 		}
-
+		.cource_item .input-score input{
+			width: 40px;
+			text-align: center;
+			margin-left: 5px;
+		}
 	</style>
 	<div class="panel-body main_body">
 	<div class="container-fluid">
@@ -200,13 +219,15 @@
 					<thead>
 							<tr>
 									<th>学号</th>
-									<th>姓名</th>
+									<th class="cource_item">姓名</th>
 									<?php if(!empty($coursed_name))
 									for ($i=4; $i < count($coursed_name); $i++) {
 											echo "<th class='cource_item_name'>$coursed_name[$i]</th>";
 									}
 									?>
-
+									<th class='cource_item cource_item_name'>实验成绩</th>
+									<th class='cource_item cource_item_name'>平时成绩</th>
+									<th class='cource_item cource_item_name'>总成绩</th>
 							</tr>
 					</thead>
 					<tbody>
@@ -221,6 +242,10 @@
 								(is_null($value[$coursed_name[4+$i]])?'<span class="bad_info" data-sid="'.$value['学号'].'">未到</span>':($value[$coursed_name[4+$i]]!=1?'<span class="good_info" data-toggle="tooltip" data-placement="top" title="'.$value[$coursed_name[4+$i]].'">已到</span>':'<span class="mid_info" data-toggle="tooltip" data-placement="top" title="补签">补签</span>')).
 								'<span class="input">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-'.$coursed_name[4+$i].'" value="'.$value['grade'][$coursed_name[4+$i]].'"></span></td>';
 							}
+							//
+							echo '<td class="cource_item cource_item"><span class="input-score">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-experimentscore" value="'.$value['grade']['experimentscore'].'"></span></td>';
+							echo '<td class="cource_item cource_item"><span class="input-score">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-averagescore" value="'.$value['grade']['averagescore'].'"></span></td>';
+							echo '<td class="cource_item cource_item"><span class="input-score">评分<input type="text" id="row-57-age" name="'.$value['学号'].'-totalscore" value="'.$value['grade']['totalscore'].'"></span></td>';
 							echo '</tr>';
 						}
 						 ?>
@@ -235,7 +260,9 @@
 										echo "<th class='cource_item_name'>$coursed_name[$i]</th>";
 								}
 								?>
-
+								<th class='cource_item_name'>实验成绩</th>
+								<th class='cource_item_name'>平时成绩</th>
+								<th class='cource_item_name'>总成绩</th>
 						</tr>
 					</tfoot>
 				</table>
